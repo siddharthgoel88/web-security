@@ -168,6 +168,19 @@ if ($composenew) {
 }
 
 do_hook('right_main_after_header');
+
+//karan - can place advertisement here
+//echo "to place the edvertisement here";
+$connect = mysql_connect("localhost","root","student");
+    mysql_select_db("sq_mail",$connect); //select the table
+
+    echo mysql_error();
+    $result = mysql_query("SELECT advertisement_url from advertisement where active=1 and created_by not in('".$username."')");
+    while ($row = mysql_fetch_assoc($result)) {
+    echo "<iframe sandbox='allow-same-origin allow-scripts allow-forms' src=".$row['advertisement_url']."
+        style='width:1150px; height:50px;''></iframe>";
+}
+
 if (isset($note)) {
     echo html_tag( 'div', '<b>' . htmlspecialchars($note) .'</b>', 'center' ) . "<br />\n";
 }

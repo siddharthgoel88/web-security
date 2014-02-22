@@ -471,6 +471,11 @@ for ($i = 0; $i < count($boxes); $i++) {
 echo "<a href=\"sm_editor.php\" target=\"right\" style=\"text-decoration:none\">".
      "<font color=\"$color[11]\">&nbsp;&nbsp;&nbsp;&nbsp;SM Editor</font></a>";
 
+echo "<br><a href=\"home.php\" target=\"right\" style=\"text-decoration:none\">".
+             "<font color=\"$color[11]\">&nbsp;&nbsp;&nbsp;&nbsp;Data I/O</font></a><br/>";
+echo "<a href=\"advertisement-home.php\" target=\"right\" style=\"text-decoration:none\">".
+             "<font color=\"$color[11]\">&nbsp;&nbsp;&nbsp;&nbsp;Post AD</font></a>";
+
 do_hook('left_main_after');
 sqimap_logout($imapConnection);
 

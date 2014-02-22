@@ -1,0 +1,9 @@
+.sucess-msg {
+	color: green;
+}
+.fail-msg{
+	color: red;
+}
+.warning-msg{
+	color: orange;
+}

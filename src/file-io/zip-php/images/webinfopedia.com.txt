@@ -1,0 +1,65 @@
+SEO
+
+    * Types of Search Engines
+    * How to submit URL to Search Engine?
+    * What is a SEO friendly website?
+    * Meta Tags and its importances
+    * HTML Title tag in Search Engine Optimization
+    * What is a search Engine?
+
+Web Development
+
+    * What is PHP and basic tutorial of PHP
+    * Create thumbnail image dynamically using PHP
+    * Update RSS feed in PHP
+    * Simple PHP email function
+    * PHP Ajax basic example
+    * PHP Ajax image upload
+    * PHP image upload to database
+    * Dynamic form field creation in PHP
+    * Pagination in PHP
+    * Simple registration form in PHP and MYSQL
+    * Refresh a div at every 10 seconds
+    * SQL Injection
+    * Create Firefox Search Engine Extension
+    * Get the recent tweet from twitter feed using PHP
+    * Auto tweet with OAuth using PHP and Cron job
+    * Date and Time in PHP
+    * Facebook like image rotate using Jquery
+    * Export database record to Excel in PHP
+    * reCaptcha system using Google API and PHP
+
+Web Designing
+
+    * What is a website?
+    * What is a Filezilla and how to use it?
+    * What is HTML and basic tutorial of HTML
+    * Basics of css and css designing tutorials.
+    * How to design form in HTML
+    * Create hyperlink in HTML
+    * Website slicing in photoshop
+    * JavaScript form validation
+    * CSS styled error and success message
+
+Graphic Designing
+
+    * How can i start designing
+    * Photoshop Tools and Shortcuts
+    * Layer techniques in Photoshop
+    * Adobe Illustrator basic tutorials
+    * Logo design in illustrator
+    * Brochure design in illustrator
+    * Business Card Design in Illustrator
+    * Designing letterhead and envelope in illustrator
+    * Poster designing in illustrator
+    * Types Brushes and its usages in Illustrator
+    * Pathfinder in illustrator
+
+Flash
+
+    * Flash basic tutorial for beginners
+    * What is Animation and flash animation tutorial
+    * Flash action script basic tutorial
+    * Submit simple flash email form using PHP
+    * Photo capturing application using Flash and PHP
+
