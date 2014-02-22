@@ -166,13 +166,14 @@ io.sockets.on('connection', function(socket) {
 
 	});
 	
-	socket.on('disconnect', function(){
+/*	socket.on('disconnect', function(){
 		var disconnected_user = revLookup[socket];
-		var i = onlineUser[disconnected_user].indexOf(socket);
-		console("Deleting socket for arrays");
+		var i = (onlineUser[disconnected_user]).indexOf(socket);
+		console.log("Deleting socket for arrays");
 		delete (onlineUser[disconnected_user])[i];
 		delete revLookup[socket];
 	});
+*/
 
 });
 
