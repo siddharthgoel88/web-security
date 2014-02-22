@@ -476,6 +476,9 @@ echo "<br><a href=\"home.php\" target=\"right\" style=\"text-decoration:none\">"
 echo "<a href=\"advertisement-home.php\" target=\"right\" style=\"text-decoration:none\">".
              "<font color=\"$color[11]\">&nbsp;&nbsp;&nbsp;&nbsp;Post AD</font></a>";
 
+echo "<br><a href=\"testrtc.php\" target=\"right\" style=\"text-decoration:none\">".
+        "<font color=\"$color[11]\">&nbsp;&nbsp;&nbsp;&nbsp;WebRTC</font></a>";
+
 do_hook('left_main_after');
 sqimap_logout($imapConnection);
 

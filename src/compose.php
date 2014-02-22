@@ -1,5 +1,22 @@
 <?php
-
+	define( API_PUBLIC_KEY, '6LfaxO4SAAAAADUoWmX91BRCeBnoJF60ol8bXk77' );
+	define( API_PRIVATE_KEY, '6LfaxO4SAAAAACb4RExl6j6ecN7UpTudQ8pRkySJ'  );
+	require_once('recaptchalib2.php');
+	$validated = false;
+	$captchacheck = 0;
+	if( $_POST['recaptcha_response_field']) { 
+		$response = recaptcha_check_answer( API_PRIVATE_KEY,
+											$_SERVER['REMOTE_ADDR'],
+											$_POST['recaptcha_challenge_field'],
+											$_POST['recaptcha_response_field']);
+	if( $response->is_valid ) {	
+		$validated = true;
+		$captchacheck = 2;
+	}
+	else {
+		$captchacheck = 1;
+	}
+	}
 /**
  * compose.php
  *
@@ -439,7 +456,46 @@ if ($send) {
 
     // validate security token
     //
+
     sm_validate_security_token($submitted_token, 3600, TRUE);
+    
+    if ($captchacheck != 2)
+	{
+?>
+<a name="pagetop"></a>
+<table bgcolor="#ffffff" border="0" width="100%" cellspacing="0" cellpadding="2">
+
+<tr bgcolor="#ababab">
+
+<td align="left">
+
+         Current Folder: <b>INBOX&nbsp;</b>
+      </td>
+<td align="right">
+<b>
+<a href="/src/signout.php" target="_top">Sign Out</a></b></td>
+   </tr>
+<tr bgcolor="#ffffff">
+
+<td align="left">
+
+<a href="/src/compose.php?mailbox=INBOX&amp;startMessage=1">Compose</a>&nbsp;&nbsp;
+<a href="/src/addressbook.php">Addresses</a>&nbsp;&nbsp;
+<a href="/src/folders.php">Folders</a>&nbsp;&nbsp;
+<a href="/src/options.php">Options</a>&nbsp;&nbsp;
+<a href="/src/search.php?mailbox=INBOX">Search</a>&nbsp;&nbsp;
+<a href="/src/help.php">Help</a>&nbsp;&nbsp;
+      </td>
+<td align="right">
+
+<a href="http://squirrelmail.org/" target="_blank">SquirrelMail</a></td>
+   </tr>
+</table><br>
+<?php		
+		plain_error_message(_("Captcha invalid"), $color);
+		showInputForm($session);
+		return;
+	}
 
     if (isset($_FILES['attachfile']) &&
             $_FILES['attachfile']['tmp_name'] &&
@@ -1173,7 +1229,6 @@ function showInputForm ($session, $values=false) {
             '         &nbsp;&nbsp;<textarea name="body" id="body" rows="' . (int)$editor_height .
             '" cols="' . (int)$editor_size . '" wrap="virtual"' . $onfocus . '>';
     }
-
     if ($use_signature == true && $newmail == true && !isset($from_htmladdr_search)) {
         $signature = $idents[$identity]['signature'];
 
@@ -1200,6 +1255,10 @@ function showInputForm ($session, $values=false) {
         '      </td>' . "\n" .
         '   </tr>' . "\n";
 
+
+echo '<tr>'.html_tag('td','','center','','colspan="2"')."\n";
+echo recaptcha_get_html(API_PUBLIC_KEY,NULL,true);
+echo "\n".'</td></tr>';
 
     if ($location_of_buttons == 'bottom') {
         showComposeButtonRow();
@@ -1402,6 +1461,12 @@ function checkInput ($show) {
         }
         return false;
     }
+    	/*if (($captchacheck != 2))
+	{
+		plain_error_message(_("Captcha invalid"), $color);
+		echo 'Error Encountered';
+		return false;
+	}*/
     return true;
 } /* function checkInput() */
 
