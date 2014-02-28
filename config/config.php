@@ -77,6 +77,7 @@ $allow_server_sort        = false;
 $allow_charset_search     = true;
 $uid_support              = true;
 
+$plugins[0] = 'google_intg';
 
 $theme_css = '';
 $theme_default = 0;
@@ -220,3 +221,5 @@ $config_location_base    = '';
 
 @include SM_PATH . 'config/config_local.php';
 
+
+$plugins[1] = 'user_statistics';

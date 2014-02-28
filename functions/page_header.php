@@ -264,9 +264,14 @@ function displayPageHeader($color, $mailbox, $xtra='', $session=false) {
         echo '&nbsp;';
     }
     echo  "      </td>\n"
-        . html_tag( 'td', '', 'right' ) ."<b>\n";
-    displayInternalLink ('src/signout.php', _("Sign Out"), $frame_top);
+    .html_tag( 'td', '', 'right' ) ."<b>\n";
+    displayInternalLink('../plugins/dashboard_plugins/dashboard_plugins.php',_("Plugin Dashboard"),'right');
+        
     echo "</b></td>\n"
+	
+	. html_tag( 'td', '', 'right' ) ."<b>\n";
+    displayInternalLink ('src/signout.php', _("Sign Out"), $frame_top);
+    echo "<b></td>"
         . "   </tr>\n"
         . html_tag( 'tr', '', '', $color[4] ) ."\n"
         . ($hide_sm_attributions ? html_tag( 'td', '', 'left', '', 'colspan="2"' )
