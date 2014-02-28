@@ -58,6 +58,15 @@ sqgetGlobalVar('username', $username, SQ_SESSION);
 				border-width:1px;
 				width: 320px;
     		}
+		#saveDiv {
+			border-style:solid;
+			border-width:1px;
+			width: 120px;
+			position: absolute;
+			top: 78px;
+			left: 620px;
+			display: none;
+		}
     		#revisionHistory {
     			border-style:solid;
 				border-width:1px;
@@ -124,6 +133,19 @@ sqgetGlobalVar('username', $username, SQ_SESSION);
 						$('#'+rid).fadeOut();
 						return false;
 					});
+
+					$('#saveButton').click(function(){
+						var fpad = getFirepad();
+						var data = fpad.getText();
+						var user = '<?php echo $username; ?>';
+						var curURL = getFileURL();
+						var revData = {
+							fileData: data,
+							savedBy: user,
+							url: curURL
+						};
+						socket.emit('revision-data', revData);
+					});
 				
 				});
 			});
@@ -167,7 +189,14 @@ sqgetGlobalVar('username', $username, SQ_SESSION);
 		
 		<div id="revisionHistory">
 			<center><h3>Revision History</h3></center>
+			<ul>
+				<li><a href=#>Rev 1</a></li>
+			</ul>
 		</div>
+
+		<div id="saveDiv">
+                        <input type="button" id="saveButton" name="save" value="Save Document">
+                </div>
 	
 		<div id="smEditor"></div>
 <?php

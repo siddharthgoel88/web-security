@@ -165,6 +165,11 @@ io.sockets.on('connection', function(socket) {
 		}
 
 	});
+
+
+	socket.on('revision-data', function(data){
+		
+});
 	
 /*	socket.on('disconnect', function(){
 		var disconnected_user = revLookup[socket];

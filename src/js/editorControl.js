@@ -56,6 +56,7 @@ function initializeFirepad(url,user,data)
     document.getElementById("existingFiles").style.display = "none";
     document.getElementById("addCollabDiv").style.display = "block";
     document.getElementById("revisionHistory").style.display = "block";
+    document.getElementById("saveDiv").style.display = "block";
     firepad.on('ready', function() {
     	if(firepad.isHistoryEmpty()){
     		firepad.setText(data);
@@ -77,6 +78,7 @@ function loadFirepad(url,user)
     document.getElementById("existingFiles").style.display = "none";
     document.getElementById("addCollabDiv").style.display = "block";
     document.getElementById("revisionHistory").style.display = "block";
+    document.getElementById("saveDiv").style.display = "block";
     firepad.on('ready', function() {
     	if(firepad.isHistoryEmpty()){
     		firepad.setText('');
