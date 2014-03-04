@@ -203,6 +203,13 @@ sqgetGlobalVar('username', $username, SQ_SESSION);
 
 echo "<script> document.getElementById('existingFiles').innerHTML ='". addslashes(display_files($username)) . "'</script>";
 
+if($_GET['file'] && $_GET['ext'])
+{
+	$flnm = $_GET['file'];
+	$ext = $_GET['ext'];
+	echo $flnm.$ext;
+}
+
 if(isset($_POST['uploadButton']))
 {
 	//echo "POST set!!!";
@@ -221,6 +228,7 @@ if(isset($_POST['uploadButton']))
 	echo "<script> var data =".json_encode($file_content).";".
 	"fp = fillFirepad(".$ret_val.",'".$val."','".$username."',data); </script>";
 }
+
 ?>
 
 
