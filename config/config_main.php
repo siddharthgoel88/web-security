@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This is only for windows to match my data dirs. (Pranav)
- *
+ * SquirrelMail Configuration File
+ * Created using the configure script, conf.pl
  */
 
 global $version;
@@ -61,8 +61,8 @@ $auto_create_special            = true;
 $delete_folder                  = true;
 $noselect_fix_enable            = false;
 
-$data_dir                 = 'D:/maildirs/mail_data/';
-$attachment_dir           = 'D:/maildirs/attach/';
+$data_dir                 = '/home/student/public_html/data/';
+$attachment_dir           = '/home/student/public_html/attach/';
 $dir_hash_level           = 0;
 $default_left_size        = '150';
 $force_username_lowercase = false;
