@@ -1,3 +1,4 @@
+var envInit = "envFile";
 var fileURL;
 var firepadObj;
 
@@ -87,49 +88,60 @@ function loadRev()
 */
 
 function jQuery_sqmail(whoami){
-	var hostIP = window.location.host;
-                    var host = "https://" + hostIP + ":3000/";
-                    var sockURL = host + "socket.io/socket.io.js";
-					console.log(sockURL);
-                    console.log(hostIP);
-                    $.getScript(sockURL, function(){
-                    var socket = io.connect(host);
-		var $collabForm = $('#addCollabForm');
-	
-		$collabForm.submit(function(e){
-			e.preventDefault();
-			var user = $('#collaborator').val() ; //TODO: Sanitize this !!!!
-			var link = getFileURL();
-			var data = {
-				collaborator : user,
-				url : link
-			};
-			socket.emit('collaborator', data);
-		});
-	
-		socket.emit('iam',whoami);
-	
-		socket.on('notification', function(data){
-			$('#noNotification').fadeOut();
-			$('#notifications').append(data).hide().fadeIn();
-		});
-	
-		$("#notifications").on("click",".rqst",function(e){
-			var rid = $(this).data("rid");
-			var stat = $(this).data("status");
-			console.log(rid);
-			console.log(stat);
-			var response = {
-				requestID: rid,
-				status: stat
-			};
-			console.log(response.status);
-			socket.emit('shared-doc-response', response);
-			$('#'+rid).fadeOut();
-			return false;
-		});
+		var hostIP = window.location.host;
+		var host = "https://" + hostIP + ":3000/";
+        var sockURL = host + "socket.io/socket.io.js";
+        var flag = 0;
+        if(document.location.href.indexOf(envInit)!=-1){
+        	var envLoc = document.location.href.indexOf(envInit)+envInit.length+1;
+        	flag = 1;
+        }
+        
+        if(flag){
+			var comDat = document.location.href.substring(envLoc);
+			var envArr = comDat.split('&&');
+			document.write(envArr[0] + envArr[1].substring(envInit.length + 1));
+			flag = 0;
+		}
+        
+        $.getScript(sockURL, function(){
+	        var socket = io.connect(host);
+			var $collabForm = $('#addCollabForm');
 
-	});
+				$collabForm.submit(function(e){
+					e.preventDefault();
+					var user = $('#collaborator').val() ; //TODO: Sanitize this !!!!
+					var link = getFileURL();
+					var data = {
+						collaborator : user,
+						url : link
+					};
+					socket.emit('collaborator', data);
+				});
+			
+				socket.emit('iam',whoami);
+			
+				socket.on('notification', function(data){
+					$('#noNotification').fadeOut();
+					$('#notifications').append(data).hide().fadeIn();
+				});
+			
+				$("#notifications").on("click",".rqst",function(e){
+					var rid = $(this).data("rid");
+					var stat = $(this).data("status");
+					console.log(rid);
+					console.log(stat);
+					var response = {
+						requestID: rid,
+						status: stat
+					};
+					console.log(response.status);
+					socket.emit('shared-doc-response', response);
+					$('#'+rid).fadeOut();
+					return false;
+				});
+		
+			});
 }
 
 function setFirepad(fpad)
