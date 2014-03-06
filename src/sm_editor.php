@@ -15,23 +15,21 @@ sqgetGlobalVar('username', $username, SQ_SESSION);
 		<title>SquirrelMail Editor</title>
 		
 		<script src="js/editorControl.js"></script>
-		
 		<script src="https://cdn.firebase.com/v0/firebase.js"></script>
-
-	        <link rel="stylesheet" href="js/codemirror/lib/codemirror.css" />
 		<script src="js/codemirror/lib/codemirror.js"></script>
-
-		<link rel="stylesheet" href="js/firepad/firepad.css" />
 		<script src="js/firepad/firepad.js"></script>
-		
 		<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-	<!--	<script src="../squirrelmail-node/socket.io/socket.io.js"></script> -->
 		
+		<link rel="stylesheet" href="js/firepad/firepad.css" />
+		<link rel="stylesheet" href="js/codemirror/lib/codemirror.css" />
 		<link rel="stylesheet" href="style/sm_editor.css" />
+		
 		<script type="text/javascript">
-			$(document).ready(jQuery_sqmail());
+			$(document).ready(jQuery_sqmail('<?php echo addslashes($username); ?>'));
 		</script>
+		
 	</head>
+	
 	<body>
         <?php echo displayPageHeader($color, 'None');?>
 		<div id="uploadFile">
@@ -90,15 +88,15 @@ if(isset($_POST['uploadButton']))
 	
 	if ($ret_val ==0 || $ret_val == 2)
 	{
-		$val = sm_create_file($file_content,$username,$file_name);
+		$val = sm_create_file($username,$file_name);
 		if($val == -1 || $val == -2)
 		{
 			$ret_val = $val;
 		}
 	}
-	
-	echo "<script> var data =".json_encode($file_content).";".
-	"fp = fillFirepad(".$ret_val.",'".$val."','".$username."',data); </script>";
+	$file_content = utf8_encode($file_content);
+	echo "<script> var fileData =".json_encode($file_content).";".
+	"fp = fillFirepad(".$ret_val.",'".$val."','".$username."',fileData); </script>";
 }
 ?>
 

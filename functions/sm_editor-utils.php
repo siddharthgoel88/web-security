@@ -68,7 +68,7 @@ function smdb_close($con)
 	mysqli_close($con);
 }
 
-function sm_create_file($file_content,$owner,$file_name)
+function sm_create_file($owner,$file_name)
 {
 	$con = smdb_connect();
 	$fhash = sha1($file_name.$owner);
@@ -142,7 +142,7 @@ function display_files($user)
 
 function sm_upload(&$file_content,&$file_name)
 {
-	$file_conent = ''; // Initializing
+	$file_content = ''; // Initializing
 	if($_FILES['attachment']['name'])
 	{
 		if ($_FILES['attachment']['type'] != "text/plain")
@@ -156,10 +156,11 @@ function sm_upload(&$file_content,&$file_name)
 			if(!$_FILES['attachment']['error'])
 			{
 				//echo "No error till now <br>";
-				$file_name = $_FILES['attachment']['name'];
+				$file_name = addslashes($_FILES['attachment']['name']);
 				//echo "File Name : ".$file_name ."<br>" ;
 				
-				$file_content = file_get_contents($_FILES['attachment']['tmp_name']);
+				$file_content = addslashes(file_get_contents($_FILES['attachment']['tmp_name']));
+				//echo "file contents are :".$file_content;
 				
 				/*$target='uploads/'.$file_name;
 				if(!move_uploaded_file($_FILES['attachment']['tmp_name'], $target))

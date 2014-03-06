@@ -27,7 +27,6 @@ function fillFirepad(ret_val,fhash,user,data)
 	else if((ret_val == 0)||(ret_val == 2))
 	{
 		var url = "https://resplendent-fire-6199.firebaseio.com/squirrelmail/" + fhash;
-		console.log(url); 
 		fp = initializeFirepad(url,user,data);
 	}
 }
@@ -87,11 +86,11 @@ function loadRev()
 }
 */
 
-function jQuery_sqmail(){
+function jQuery_sqmail(whoami){
 	var hostIP = window.location.host;
                     var host = "https://" + hostIP + ":3000/";
                     var sockURL = host + "socket.io/socket.io.js";
-	console.log(sockURL);
+					console.log(sockURL);
                     console.log(hostIP);
                     $.getScript(sockURL, function(){
                     var socket = io.connect(host);
@@ -108,7 +107,7 @@ function jQuery_sqmail(){
 			socket.emit('collaborator', data);
 		});
 	
-		socket.emit('iam','<?php echo addslashes($username); ?>');
+		socket.emit('iam',whoami);
 	
 		socket.on('notification', function(data){
 			$('#noNotification').fadeOut();
@@ -130,19 +129,6 @@ function jQuery_sqmail(){
 			return false;
 		});
 
-		$('#saveButton').click(function(){
-			var fpad = getFirepad();
-			var data = fpad.getText();
-			var user = '<?php echo $username; ?>';
-			var curURL = getFileURL();
-			var revData = {
-				fileData: data,
-				savedBy: user,
-				url: curURL
-			};
-			socket.emit('revision-data', revData);
-		});
-	
 	});
 }
 
