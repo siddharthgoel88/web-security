@@ -1,7 +1,3 @@
-/**
- * @author Siddharth Goel
- */
-
 var fileURL;
 var firepadObj;
 
@@ -30,14 +26,6 @@ function fillFirepad(ret_val,fhash,user,data)
 	}
 	else if((ret_val == 0)||(ret_val == 2))
 	{
-		/*
-		txtArea = document.getElementById("txtArea");
-		editArea = document.getElementById("editAreaID");
-		uploadFile =document.getElementById("uploadFile");
-		//uploadFile.style.display = "none";
-		txtArea.style.display = "block";
-		editArea.innerHTML = data;
-		*/
 		var url = "https://resplendent-fire-6199.firebaseio.com/squirrelmail/" + fhash;
 		console.log(url); 
 		fp = initializeFirepad(url,user,data);
@@ -88,6 +76,7 @@ function loadFirepad(url,user)
   //  loadRev();
     
 }
+
 /*
 function loadRev()
 {
@@ -97,6 +86,66 @@ function loadRev()
 	console.log(value);
 }
 */
+
+function jQuery_sqmail(){
+	var hostIP = window.location.host;
+                    var host = "https://" + hostIP + ":3000/";
+                    var sockURL = host + "socket.io/socket.io.js";
+	console.log(sockURL);
+                    console.log(hostIP);
+                    $.getScript(sockURL, function(){
+                    var socket = io.connect(host);
+		var $collabForm = $('#addCollabForm');
+	
+		$collabForm.submit(function(e){
+			e.preventDefault();
+			var user = $('#collaborator').val() ; //TODO: Sanitize this !!!!
+			var link = getFileURL();
+			var data = {
+				collaborator : user,
+				url : link
+			};
+			socket.emit('collaborator', data);
+		});
+	
+		socket.emit('iam','<?php echo addslashes($username); ?>');
+	
+		socket.on('notification', function(data){
+			$('#noNotification').fadeOut();
+			$('#notifications').append(data).hide().fadeIn();
+		});
+	
+		$("#notifications").on("click",".rqst",function(e){
+			var rid = $(this).data("rid");
+			var stat = $(this).data("status");
+			console.log(rid);
+			console.log(stat);
+			var response = {
+				requestID: rid,
+				status: stat
+			};
+			console.log(response.status);
+			socket.emit('shared-doc-response', response);
+			$('#'+rid).fadeOut();
+			return false;
+		});
+
+		$('#saveButton').click(function(){
+			var fpad = getFirepad();
+			var data = fpad.getText();
+			var user = '<?php echo $username; ?>';
+			var curURL = getFileURL();
+			var revData = {
+				fileData: data,
+				savedBy: user,
+				url: curURL
+			};
+			socket.emit('revision-data', revData);
+		});
+	
+	});
+}
+
 function setFirepad(fpad)
 {
 	firepadObj = fpad;
