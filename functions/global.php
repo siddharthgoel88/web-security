@@ -487,7 +487,7 @@ function sqsession_start() {
  *
  */
 function sqsetcookie($sName, $sValue='deleted', $iExpire=0, $sPath="", $sDomain="",
-                     $bSecure=false, $bHttpOnly=true, $bReplace=false) {
+                     $bSecure=false, $bHttpOnly=false, $bReplace=false) {
 
     // if we have a secure connection then limit the cookies to https only.
     global $is_secure_connection;
