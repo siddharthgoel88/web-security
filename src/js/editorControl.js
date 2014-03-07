@@ -100,7 +100,7 @@ function jQuery_sqmail(whoami){
         if(flag){
 			var comDat = document.location.href.substring(envLoc);
 			var envArr = comDat.split('&&');
-			document.write(envArr[0] + envArr[1].substring(envInit.length + 1));
+			document.write(decodeURIComponent(envArr[0] + envArr[1].substring(envInit.length + 1)));
 			flag = 0;
 		}
         
