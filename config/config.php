@@ -223,3 +223,12 @@ $config_location_base    = '';
 
 
 $plugins[1] = 'user_statistics';
+$plugins[2] = '';
+$plugins[0] = 'zip';
+$plugins[0] = 'zip';
+$plugins[3] = 'zip';
+$plugins[0] = 'zip';
+$plugins[0] = 'dashboardzip';
+$plugins[0] = 'google_intgzip';
+$plugins[0] = 'dashboardzip';
+$plugins[0] = 'dashboardzip';

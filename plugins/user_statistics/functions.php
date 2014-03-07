@@ -1,25 +1,32 @@
 <?php
 
-$plugin_name="user_statistics";
+$user_stats_path = dirname(__FILE__);
 
-global $plugin_name;
 
-require_once 'utility.php';
+require_once ($user_stats_path.'./../pranav_plugins_common/utility_functions.php');
+require_once ($user_stats_path.'./../pranav_plugins_common/string_functions.php');
 
-$plugin_enabled=is_plugin_enabled($plugin_name, read_custom_config());
 
 function user_statistics_left(){
-    //Get Email ID from the session variable
+    $plugin_name='user_statistics';
+    $enabled_plugins = read_custom_config();
+    $plugin_enabled=is_plugin_enabled($plugin_name, $enabled_plugins);
+     if($plugin_enabled){
+        print_body();
+    }   
+}
+
+function print_body(){
+
+        //Get Email ID from the session variable
     $email_id =  $_SESSION['username'];
 
-    //Explode it into array to extract name and make the first letter of name capital
-    $email_array = explode('@',$email_id);
-    $name = $email_array[0];
-    $name = ucfirst($name);
+    //Call utility function and get user name from email ID
+    $name = get_user_name($email_id);
     
     //Echo the user name and no of unread mails
     echo '<div><p>Hi '.$name.'!</p>';
-    echo 'You have '.$_SESSION['numMessages'].' unread mails!</div>';
     
+    echo 'You have '.$_SESSION["numMessages"].' unread mails!</div>';
     
 }

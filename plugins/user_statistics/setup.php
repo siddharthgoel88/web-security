@@ -1,6 +1,6 @@
 <?php
     
-
+$plugin_name='user_statistics';
 
 function squirrelmail_plugin_init_user_statistics() {
     global $squirrelmail_plugin_hooks;

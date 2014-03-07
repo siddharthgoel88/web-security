@@ -5,7 +5,8 @@ function getGoogleCode($type = null) {
     global $client_id;
     global $client_secret;
     global $developer_key;
-    global $redirect_uri;
+    
+    $redirect_uri='http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 
     $client = new Google_Client();
     $client->setApplicationName("CS5331 - Google Intg");
