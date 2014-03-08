@@ -1,6 +1,7 @@
 var envInit = "envFile";
-var fileURL;
+var fileURL = "";
 var firepadObj;
+var globalSocket;
 
 function fillFirepad(ret_val,fhash,user,data)
 {
@@ -51,6 +52,7 @@ function initializeFirepad(url,user,data)
     	};
     });
     setFileURL(url);
+    $(document).ready(setTimeout(function(){loadRating();},2000));
 }
 
 
@@ -73,9 +75,15 @@ function loadFirepad(url,user)
     	};
     });
     setFileURL(url);
-  //  loadRev();
-    
+	loadRating();
 }
+
+function loadRating(){
+	var soc = getSocket();
+	soc.emit('load-rating', getFileURL());
+} 
+
+
 
 /*
 function loadRev()
@@ -106,6 +114,7 @@ function jQuery_sqmail(whoami){
         
         $.getScript(sockURL, function(){
 	        var socket = io.connect(host);
+	        setSocket(socket);
 			var $collabForm = $('#addCollabForm');
 
 				$collabForm.submit(function(e){
@@ -125,6 +134,14 @@ function jQuery_sqmail(whoami){
 					$('#noNotification').fadeOut();
 					$('#notifications').append(data).hide().fadeIn();
 				});
+				
+				socket.on('respective-rating', function(data){
+					if(data)
+						$('#docRating').html(data).hide().fadeIn();
+					else
+						$('#docRating').hide().fadeIn();
+						
+				});
 			
 				$("#notifications").on("click",".rqst",function(e){
 					var rid = $(this).data("rid");
@@ -140,8 +157,30 @@ function jQuery_sqmail(whoami){
 					$('#'+rid).fadeOut();
 					return false;
 				});
-		
+				
+				$('#docRating').on('click','#rateSubmit',function(e){
+					e.preventDefault();
+					var data = {
+						rating : $('#rateData').val(),
+						url : getFileURL()
+					};
+					socket.emit('doc-rating',data);
+					$('#docRating').fadeOut();
+					setTimeout(function(){loadRating();},3000);
+					return false;
+				});
+				
 			});
+}
+
+function setSocket(gsocket)
+{
+	globalSocket = gsocket;
+}
+
+function getSocket()
+{
+	return globalSocket;
 }
 
 function setFirepad(fpad)

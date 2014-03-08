@@ -5,17 +5,18 @@
 var fs = require('fs');
 
 var options = {
-  key: fs.readFileSync('/etc/apache2/ssl/squirrelmail.key'),
-  cert: fs.readFileSync('/etc/apache2/ssl/squirrelmail.crt'),
-  ca: fs.readFileSync('/etc/apache2/ssl/squirrelmail.crt')
+	key : fs.readFileSync('/etc/apache2/ssl/squirrelmail.key'),
+	cert : fs.readFileSync('/etc/apache2/ssl/squirrelmail.crt'),
+	ca : fs.readFileSync('/etc/apache2/ssl/squirrelmail.crt')
 };
 
-var app = require('express')(),
-	  server = require('https').createServer(options,app), 
-	  io = require('socket.io').listen(server),
-	  mysql = require('mysql'), 
-	  crypto = require('crypto'),
-	  onlineUser = {}, revLookup = {};
+var app = require('express')(), 
+	server = require('https').createServer(options, app), 
+	io = require('socket.io').listen(server), 
+	mysql = require('mysql'), 
+	crypto = require('crypto'), 
+	validator = require('validator'), 
+	onlineUser = {}, revLookup = {};
 
 var connection = mysql.createConnection({
 	host : 'localhost',
@@ -88,15 +89,23 @@ io.sockets.on('connection', function(socket) {
 					}
 					if (rows.length == 1) {
 						connection.query('START TRANSACTION ', function(err) {
-							if (err) { console.log("Error in transaction start !!!");}
+							if (err) {
+								console.log("Error in transaction start !!!");
+							}
 							var param = [rows[0].RequestHash];
-							connection.query('DELETE FROM REQUESTS WHERE RequestHash = ? ', param, function(err){
-								if(err) {console.log("Error in deletion !!!");}
+							connection.query('DELETE FROM REQUESTS WHERE RequestHash = ? ', param, function(err) {
+								if (err) {
+									console.log("Error in deletion !!!");
+								}
 								var param = [rows[0].FileHash, rows[0].Receiver];
-								connection.query('INSERT INTO COLLABORATORS (FileHash, Collaborator) VALUES (?,?)',param, function(err){
-									if(err) {console.log("Error in insertion !!!");}
-									connection.query('COMMIT', function(err){
-										if(err) {console.log("Could not commit !!!");}
+								connection.query('INSERT INTO COLLABORATORS (FileHash, Collaborator) VALUES (?,?)', param, function(err) {
+									if (err) {
+										console.log("Error in insertion !!!");
+									}
+									connection.query('COMMIT', function(err) {
+										if (err) {
+											console.log("Could not commit !!!");
+										}
 									});
 								});
 							});
@@ -151,10 +160,7 @@ io.sockets.on('connection', function(socket) {
 							connection.query('SELECT FileName FROM FILE WHERE FileHash = ? ', param, function(err, rows, field) {
 								if (err)
 									throw err;
-								result = '<div id="' + rhash + '"><ul><li>' + user + ' added you a collaborator for ' + rows[0].FileName + 
-								' <br/><a href="javascript:void(0)" class="rqst" data-rid="' + rhash + 
-								'" data-status="1" >Accept</a> <a href="javascript:void(0)" class="rqst" ' + 
-								' data-rid="' + rhash + '" data-status ="0" >' + ' Ignore</a></li></ul> </div>';
+								result = '<div id="' + rhash + '"><ul><li>' + user + ' added you a collaborator for ' + rows[0].FileName + ' <br/><a href="javascript:void(0)" class="rqst" data-rid="' + rhash + '" data-status="1" >Accept</a> <a href="javascript:void(0)" class="rqst" ' + ' data-rid="' + rhash + '" data-status ="0" >' + ' Ignore</a></li></ul> </div>';
 
 								emitNotif(collaborator, result);
 							});
@@ -166,19 +172,92 @@ io.sockets.on('connection', function(socket) {
 
 	});
 
+	socket.on('doc-rating', function(data) {
+		if (!validator.isURL(data.url)) {
+			console.log("Rating URL is not of correct form \n");
+			return;
+		}
+		var url = data.url;
+		var fhash = url.substring(58);
+		var rating = validator.toString(validator.escape(data.rating));
+		var personRating = revLookup[socket];
 
-	socket.on('revision-data', function(data){
-		
-});
-	
-/*	socket.on('disconnect', function(){
-		var disconnected_user = revLookup[socket];
-		var i = (onlineUser[disconnected_user]).indexOf(socket);
-		console.log("Deleting socket for arrays");
-		delete (onlineUser[disconnected_user])[i];
-		delete revLookup[socket];
+		connection.query('USE SM', function(err) {
+			if (err) {
+				console.log("Issues in using SM database");
+				return;
+			}
+			
+			var param = [fhash, personRating];
+			connection.query('SELECT * FROM COLLABORATORS WHERE FileHash=? and Collaborator=?', param, function(err,rows,fields){
+				if(err)	{
+					console.log("Error in querying Collaborators table \n");
+					return;
+				}
+				if(rows.length == 0) {
+					console.log("This user is not allowed to rate this document");
+					return;
+				}
+				var param = [rating, url];
+				connection.query('UPDATE FILE SET Rating=? WHERE URL=?', param, function(err){
+					if(err)
+					{
+						console.log("Error in updating the Rating of File \n");
+						return;
+					}
+				});
+			});
+		});
 	});
-*/
+
+	socket.on('load-rating', function(data){
+		if(!validator.isURL(data)){
+			console.log("The load rating URL is not valid \n");
+			return;
+		}
+		var response = '';
+		
+		connection.query('USE SM', function(err){
+			if(err){
+				console.log("Some error in connect to SM database \n");
+				return;
+			}
+			
+			var param=[data];
+			connection.query('SELECT Rating FROM FILE WHERE URL=?',param,function(err,rows,fields){
+				if(err){
+					console.log("Error in querying FILE table \n");
+					return;
+				}
+				
+				if(rows.length == 1)
+				{
+					if(rows[0].Rating == null)
+					{
+						response = null;
+					}
+					else {
+						response = '<br/><br/><center>This document has been marked as <i><b>' + rows[0].Rating + '</b></i>.</center>';
+					}
+					socket.emit('respective-rating',response);
+				}
+			});
+		});
+		
+	});
+
+	socket.on('revision-data', function(data) {
+
+	});
+
+	/*	socket.on('disconnect', function(){
+	 var disconnected_user = revLookup[socket];
+	 var i = (onlineUser[disconnected_user]).indexOf(socket);
+	 console.log("Deleting socket for arrays");
+	 delete (onlineUser[disconnected_user])[i];
+	 delete revLookup[socket];
+	 });
+	 */
 
 });
 
@@ -195,10 +274,7 @@ function sendNotifications(user) {
 			if (rows.length > 0) {
 				for (var i in rows) {
 					var row = rows[i];
-					result += '<div id="' + row.RequestHash + '"><li>' + connection.escape(row.Sender) + ' added you a collaborator for ' + 
-					connection.escape(row.FileName) + '<br/> <a href="javascript:void(0)" class="rqst" data-rid="' + 
-					row.RequestHash + '" data-status="1">Accept</a> <a href="javascript:void(0)" class="rqst" ' +
-					 'data-rid="' + row.RequestHash + '" data-status="0"> Ignore</a> </li></div>';
+					result += '<div id="' + row.RequestHash + '"><li>' + connection.escape(row.Sender) + ' added you a collaborator for ' + connection.escape(row.FileName) + '<br/> <a href="javascript:void(0)" class="rqst" data-rid="' + row.RequestHash + '" data-status="1">Accept</a> <a href="javascript:void(0)" class="rqst" ' + 'data-rid="' + row.RequestHash + '" data-status="0"> Ignore</a> </li></div>';
 				}
 				result += '</ul>';
 			} else {
@@ -214,9 +290,9 @@ function emitNotif(user, data) {
 	var sock = [];
 	sock = onlineUser[user];
 	//console.log("Entered emitNotif.User=%s", user);
-	console.log(sock);
+	//console.log(sock);
 	for (var i in sock) {
-		console.log("Socket number %d = %s", i + 1, sock[i]);
+		//console.log("Socket number %d = %s", i + 1, sock[i]);
 		sock[i].emit('notification', data);
 	}
 }

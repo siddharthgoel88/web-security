@@ -44,8 +44,18 @@
 	left:820px; 
 	top:370px;
 	width: 350px;
-	height: 253px;
+	height: 140px;
 	overflow: scroll;
+	display: none;
+}
+#docRating {
+	border-style:solid;
+	border-width:1px;
+	position:absolute; 
+	left:820px; 
+	top:520px;
+	width: 350px;
+	height: 103px;
 	display: none;
 }
 #existingFiles {
