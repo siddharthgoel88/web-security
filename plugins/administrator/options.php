@@ -228,11 +228,10 @@ require_once(SM_PATH . 'plugins/administrator/auth.php');
 
 global $data_dir, $username;
 
-if ( !adm_check_user() ) {
+if ( !adm_check_user() )
     header('Location: ' . SM_PATH . 'src/options.php') ;
-    exit;
-}
 
+header_remove();
 displayPageHeader($color, 'None');
 
 $newcfg = array( );
