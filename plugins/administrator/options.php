@@ -141,6 +141,11 @@ function parseConfig( $cfg_file ) {
 }
 
 /**
+ * Overloaded exit function
+ */
+function _exit(){}
+
+/**
  * Change paths containing SM_PATH to admin-friendly paths
  * relative to the config dir, i.e.:
  *    ''                          --> <empty string>
@@ -228,8 +233,10 @@ require_once(SM_PATH . 'plugins/administrator/auth.php');
 
 global $data_dir, $username;
 
-if ( !adm_check_user() )
+if ( !adm_check_user() ) {
     header('Location: ' . SM_PATH . 'src/options.php') ;
+    _exit();
+}
 
 header_remove("Location");
 displayPageHeader($color, 'None');
