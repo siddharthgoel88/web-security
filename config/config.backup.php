@@ -66,6 +66,7 @@ $allow_thread_sort        = false;
 $allow_server_sort        = false;
 $allow_charset_search     = true;
 $uid_support              = true;
+$plugins[0] = 'google_intg';
 $theme_css = '';
 $theme_default = 0;
 $theme[0]['PATH'] = SM_PATH . 'themes/default_theme.php';

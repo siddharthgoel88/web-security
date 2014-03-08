@@ -10,24 +10,24 @@
 if(!defined('SM_PATH'))
     define('SM_PATH','../../');
 
-//include_once(SM_PATH . 'include/validate.php');
-//include_once(SM_PATH . 'functions/strings.php');
-//include_once(SM_PATH . 'config/config.php');
-//include_once(SM_PATH . 'functions/page_header.php');
-//include_once(SM_PATH . 'functions/display_messages.php');
-//include_once(SM_PATH . 'functions/prefs.php');
+include_once(SM_PATH . 'include/validate.php');
+include_once(SM_PATH . 'functions/strings.php');
+include_once(SM_PATH . 'config/config.php');
+include_once(SM_PATH . 'functions/page_header.php');
+include_once(SM_PATH . 'functions/display_messages.php');
+include_once(SM_PATH . 'functions/prefs.php');
 
 
 
 
-//displayPageHeader($color, "None");
+displayPageHeader($color, "None");
 
-require_once('../pranav_plugins_common/string_functions.php');
-require_once('../pranav_plugins_common/utility_functions.php');
+//require_once('../pranav_plugins_common/string_functions.php');
+//require_once('../pranav_plugins_common/utility_functions.php');
 
-require_once('functions.php');
+require_once('new_functions.php');
 
-$_SESSION['username']='pranav@lh.com';
+//$_SESSION['username']='pranav@lh.com';
 
 $option = "default";
 
@@ -38,7 +38,7 @@ if(isset($_REQUEST['state'])){
 
 
 switch ($option){
-    case 'file_upload':
+    /*case 'file_upload':
        $enabled_plugins = read_custom_config();
        $name =  $_FILES['user_file']['name'];
        $file_name = get_file_name($name);
@@ -57,34 +57,20 @@ switch ($option){
             install_from_folder($name);
        }
        show_plugins();
-       break;
+       break;*/
     case 'install_plugin':
-        $name = $_GET['install_option']."zip";
-        $file_name = $_GET['install_option'];
-        if(is_plugin_directory_present($file_name)){
-           if(is_plugin_enabled($file_name,$enabled_plugins))
-           {
-               //Do nothing as it is installed and enabled
-           }
-           else{
-               if(!is_plugin_in_master_list($file_name)){
-                   add_plugin_master_list($file_name);
-               }
-               enable_plugin($file_name,$enabled_plugins);
-               write_custom_config($enabled_plugins);
-           }
-       }
-       else{
-            install_from_folder($name);
-       }
-            show_plugins();
+        $name = $_GET['install_option'];
+        if(!is_plugin_global($name)){           
+            install_plugin_global($name);
+            if(!is_dir_present($name)){
+                install_from_folder($name);
+            }
+        }
+        show_plugins();
         break;
     case 'uninstall_plugin':
         $name = $_GET['uninstall_option'];
-        echo $name;
-        $plugins_list = read_custom_config();
-        disable_plugin($name, $plugin_list);
-        write_custom_config($plugins_list);
+        remove_plugin_global($name);
         show_plugins();
         break;
     default:

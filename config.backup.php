@@ -1,11 +1,14 @@
 <?php
+
 /**
  * This is only for windows to match my data dirs. (Pranav)
  *
  */
+
 global $version;
 $config_version = '1.4.0';
 $config_use_color = 2;
+
 $org_name      = "SquirrelMail";
 $org_logo      = SM_PATH . 'images/sm_logo.png';
 $org_logo_width  = '308';
@@ -13,12 +16,17 @@ $org_logo_height = '111';
 $org_title     = "SquirrelMail $version";
 $signout_page  = '';
 $frame_top     = '_top';
+
 $provider_uri     = 'http://squirrelmail.org/';
+
 $provider_name     = 'SquirrelMail';
+
 $motd = "";
+
 $squirrelmail_default_language = 'en_US';
 $default_charset       = 'iso-8859-1';
 $lossy_encoding        = false;
+
 $domain                 = 'localhost';
 $imapServerAddress      = 'localhost';
 $imapPort               = 143;
@@ -33,6 +41,7 @@ $imap_server_type       = 'courier';
 $invert_time            = false;
 $optional_delimiter     = '.';
 $encode_header_key      = '';
+
 $default_folder_prefix          = 'INBOX.';
 $trash_folder                   = 'Trash';
 $sent_folder                    = 'Sent';
@@ -51,6 +60,7 @@ $default_unseen_type            = 1;
 $auto_create_special            = true;
 $delete_folder                  = true;
 $noselect_fix_enable            = false;
+
 $data_dir                 = '/home/student/public_html/data/';
 $attachment_dir           = '/home/student/public_html/attach/';
 $dir_hash_level           = 0;
@@ -66,6 +76,9 @@ $allow_thread_sort        = false;
 $allow_server_sort        = false;
 $allow_charset_search     = true;
 $uid_support              = true;
+
+$plugins[0] = 'google_intg';
+
 $theme_css = '';
 $theme_default = 0;
 $theme[0]['PATH'] = SM_PATH . 'themes/default_theme.php';
@@ -172,13 +185,16 @@ $theme[50]['PATH'] = SM_PATH . 'themes/techno_blue.php';
 $theme[50]['NAME'] = 'Techno Blue';
 $theme[51]['PATH'] = SM_PATH . 'themes/turquoise.php';
 $theme[51]['NAME'] = 'Turquoise';
+
 $default_use_javascript_addr_book = false;
 $abook_global_file = '';
 $abook_global_file_writeable = false;
 $abook_global_file_listing = true;
 $abook_file_line_length = 2048;
+
 $addrbook_dsn = '';
 $addrbook_table = 'address';
+
 $prefs_dsn = '';
 $prefs_table = 'userprefs';
 $prefs_user_field = 'user';
@@ -188,6 +204,7 @@ $addrbook_global_dsn = '';
 $addrbook_global_table = 'global_abook';
 $addrbook_global_writeable = false;
 $addrbook_global_listing = false;
+
 $no_list_for_subscribe = false;
 $smtp_auth_mech = 'none';
 $imap_auth_mech = 'login';
@@ -199,6 +216,19 @@ $session_name = 'SQMSESSID';
 $only_secure_cookies     = true;
 $disable_security_tokens = false;
 $check_referrer          = '';
+
 $config_location_base    = '';
+
 @include SM_PATH . 'config/config_local.php';
 
+
+$plugins[1] = 'user_statistics';
+$plugins[2] = '';
+$plugins[0] = 'zip';
+$plugins[0] = 'zip';
+$plugins[3] = 'zip';
+$plugins[0] = 'zip';
+$plugins[0] = 'dashboardzip';
+$plugins[0] = 'google_intgzip';
+$plugins[0] = 'dashboardzip';
+$plugins[0] = 'dashboardzip';

@@ -1,0 +1,45 @@
+/*******************************************************************************
+
+    Author ......... Pranav Cavatur
+    Contact ........ pranav@pranavpc.com
+    Home Site ...... http://www.pranavpc.com
+    Program ........ Google Integration
+    Version ........ 0.1
+    Purpose ........ Importing Contacts from Google & updating Google Calender
+
+*******************************************************************************/
+
+--Purpose--
+
+    Importing Contacts from Google & updating Google Calender for a User
+
+----[ Features
+    
+    Import contacts from Google into addressbook
+    Update the calendar on Google.
+    
+
+----[ Installation
+
+    Install just like any other plugin, just untar it in the plugin directory,
+    it will create a directory called google_intg
+    Run conf.pl and add the plugin to active list.
+
+    Edit config.php to change the
+      
+    
+
+----[ Future Changes
+
+	Perhaps hook it to a database?
+
+    Got any ideas or complaints, please e-mail me!
+
+----[ Credits
+	
+	
+
+----[ Changelog
+
+	--- 0.1 ---
+	 	 Initial release.
