@@ -231,7 +231,7 @@ global $data_dir, $username;
 if ( !adm_check_user() )
     header('Location: ' . SM_PATH . 'src/options.php') ;
 
-header_remove();
+header_remove("Location");
 displayPageHeader($color, 'None');
 
 $newcfg = array( );
