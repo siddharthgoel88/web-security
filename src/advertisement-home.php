@@ -1,5 +1,5 @@
 <?php 
-/** This is the advertisement home page */
+/** This is the advertisement home page */ 
 define('SM_PATH','../');
 define('PAGE_NAME', 'advertisement-home');
 
