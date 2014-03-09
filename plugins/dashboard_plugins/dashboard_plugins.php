@@ -33,31 +33,21 @@ $option = "default";
 
 if(isset($_REQUEST['state'])){
     $option = $_REQUEST['state'];
-    var_dump($_REQUEST);
+    
 }
 
 
+
 switch ($option){
-    /*case 'file_upload':
-       $enabled_plugins = read_custom_config();
-       $name =  $_FILES['user_file']['name'];
-       $file_name = get_file_name($name);
-       if(is_plugin_directory_present($file_name)){
-           if(is_plugin_enabled($file_name,$enabled_plugins))
-           {
-               //Do nothing as it is installed and enabled
-           }
-           else{
-               enable_plugin($file_name,$enabled_plugins);
-               write_custom_config($enabled_plugins);
-           }
-       }
-       else{
-            move_uploaded_file($_FILES['user_file']['tmp_name'], "plugin_zips/".$_FILES['user_file']['name']);
-            install_from_folder($name);
-       }
+    case 'file_upload':
+       if(zip_file_install()){
+            unset($_SESSION);
+            unset($plugins);
+            do_hook('logout');
+            echo '<script> window.top.location = "/";</script>';
+        }
        show_plugins();
-       break;*/
+       break;
     case 'install_plugin':
         $name = $_GET['install_option'];
         if(!is_plugin_global($name)){           
@@ -65,18 +55,24 @@ switch ($option){
             if(!is_dir_present($name)){
                 install_from_folder($name);
             }
+            unset($_SESSION);
+            unset($plugins);
+            do_hook('logout');
+            echo '<script> window.top.location = "/";</script>';
         }
-        show_plugins();
+        //show_plugins();
         break;
     case 'uninstall_plugin':
         $name = $_GET['uninstall_option'];
         remove_plugin_global($name);
-        show_plugins();
+        unset($_SESSION);
+        unset($plugins);
+        do_hook('logout');
+        echo '<script> window.top.location = "/";</script>';
         break;
     default:
         show_plugins();
-        //var_dump($plugins_list);
-        break;
+         break;
         
 }
 /*require_once('default_menu.php');

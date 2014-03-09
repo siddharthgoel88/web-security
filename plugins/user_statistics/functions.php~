@@ -20,7 +20,7 @@ function user_statistics_left(){
     //Echo the user name and no of unread mails
     echo '<div><p>Hi '.$name.'!</p>';
     
-    echo 'You have '.($_SESSION["numMessages"]>0?$_SESSION["numMessages"]:'no').' unread mails!</div>';
+    echo 'You have '.$_SESSION["numMessages"]>0?$_SESSION["numMessages"]:"no".' unread mails!</div>';
 
 }
 
