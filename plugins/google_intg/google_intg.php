@@ -49,14 +49,16 @@ if(isset($option)){
             require_once('google_event_form.php');
             break;
         case "got_event_details":
-             echo "hi";
              $_SESSION['ename']=$_GET['ename'];
              $_SESSION['start_time']=$_GET['start_time'];
              $_SESSION['start_date']=$_GET['start_date'];
              $_SESSION['end_time']=$_GET['end_time'];
              $_SESSION['end_date']=$_GET['end_date'];
              $_SESSION['summary']=$_GET['summary'];
+             echo "<p>Updating event name :". htmlentities($_SESSION['ename'])."</p>";
+             echo "<p>Event Summary is :". $_SESSION['summary']."</p>";
              updateGoogleCalendar();
+            
              break;
         case "got_code_calendar":
             updateGoogleCalendar();
