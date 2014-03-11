@@ -202,5 +202,4 @@ $check_referrer          = '';
 $config_location_base    = '';
 @include SM_PATH . 'config/config_local.php';
 
-$plugins[] = 'user_statistics';
 $plugins[] = 'google_intg';

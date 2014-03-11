@@ -55,20 +55,15 @@ switch ($option){
             if(!is_dir_present($name)){
                 install_from_folder($name);
             }
-            unset($_SESSION);
-            unset($plugins);
-            do_hook('logout');
-            echo '<script> window.top.location = "/";</script>';
+            sqsession_destroy();
+            echo '<script> window.top.location = "signout.php";</script>';
         }
         //show_plugins();
         break;
     case 'uninstall_plugin':
         $name = $_GET['uninstall_option'];
         remove_plugin_global($name);
-        unset($_SESSION);
-        unset($plugins);
-        do_hook('logout');
-        echo '<script> window.top.location = "/";</script>';
+        echo '<script> window.top.location = "signout.php";</script>';
         break;
     default:
         show_plugins();
