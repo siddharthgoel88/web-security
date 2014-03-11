@@ -171,7 +171,6 @@ do_hook('right_main_after_header');
 
 //karan - can place advertisement here
 //echo "to place the edvertisement here";
-/*
 $connect = mysql_connect("localhost","root","student");
     mysql_select_db("sq_mail",$connect); //select the table
 
@@ -181,7 +180,6 @@ $connect = mysql_connect("localhost","root","student");
     echo "<iframe sandbox='allow-same-origin allow-scripts allow-forms' src=".$row['advertisement_url']."
         style='width:1150px; height:50px;''></iframe>";
 }
-*/
 
 if (isset($note)) {
     echo html_tag( 'div', '<b>' . htmlspecialchars($note) .'</b>', 'center' ) . "<br />\n";
