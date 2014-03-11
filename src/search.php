@@ -335,7 +335,10 @@ elseif ($submit == 'delete' && isset($count)) {
 }
 
 do_hook('search_before_form');
-
+if(!(empty($_GET['what']))){
+echo 'you searched for:'.$_GET['what'];
+echo ' in location  :'.$_GET['where'];
+}
 echo html_tag( 'table',
          html_tag( 'tr', "\n" .
              html_tag( 'td', '<b>' . _("Search") . '</b>', 'center', $color[0] )
