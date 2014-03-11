@@ -77,7 +77,7 @@ function updateGoogleCalendar(){
         $end->setDateTime($end_date_time);
         $event->setEnd($end);
         $createdEvent = $cal->events->insert('primary', $event);
-        echo $createdEvent->getId();
+       
     }
 
 }
@@ -136,7 +136,7 @@ function getGoogleContacts() {
        
         $to_write_array;
         $counter = 0;
-        header("refresh:5;url= https://192.168.56.101/src/webmail.php");
+        header("refresh:5;url=localhost");
         echo"<p>The following contacts have been imported : </p>";
         echo "<p>You can check the contacts in Address Book. Redirecting in 5 seconds</p>";
         echo"<table border=1><body><tr><th>Nick Name</th><th>First Name</th><th>Last Name</th><th>Email</th></tr>";
@@ -175,8 +175,7 @@ function getGoogleContacts() {
         $fp = fopen($abook_file,"a");
 
         foreach($to_write_array as $fields){
-            var_dump($fields);
-            fputcsv($fp, $fields,"|");
+              fputcsv($fp, $fields,"|");
         }
         
         fclose($fp);

@@ -1,5 +1,5 @@
 <?php
-var_dump($_POST);
+echo $_POST['redirect_url'];
 echo <<<EOD
 <script>
 
