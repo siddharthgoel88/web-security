@@ -89,6 +89,13 @@ if (!sqsession_is_registered('user_is_logged_in')) {
     $onetimepad = OneTimePadCreate(strlen($secretkey));
     $key = OneTimePadEncrypt($secretkey, $onetimepad);
     sqsession_register($onetimepad, 'onetimepad');
+	
+    //Initialize folder security token related variables
+	$sm_folder_salt = 327913343654887119055952350193798025770370682048602;
+	sqsession_register($sm_folder_salt, 'folder_salt');
+	$sm_opr_count = 0;
+	sqsession_register($sm_opr_count, 'opr_count');
+	
 
     /* remove redundant spaces */
     $login_username = trim($login_username);

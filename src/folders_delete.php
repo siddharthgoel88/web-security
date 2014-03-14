@@ -36,14 +36,20 @@ require_once(SM_PATH . 'functions/forms.php');
  */
 
 /* globals */
-sqgetGlobalVar('key',       $key,           SQ_COOKIE);
-sqgetGlobalVar('username',  $username,      SQ_SESSION);
-sqgetGlobalVar('onetimepad',$onetimepad,    SQ_SESSION);
-sqgetGlobalVar('delimiter', $delimiter,     SQ_SESSION);
-sqgetGlobalVar('mailbox',   $mailbox,       SQ_POST);
+sqgetGlobalVar('key',       $key,            SQ_COOKIE);
+sqgetGlobalVar('username',  $username,       SQ_SESSION);
+sqgetGlobalVar('onetimepad',$onetimepad,     SQ_SESSION);
+sqgetGlobalVar('delimiter', $delimiter,      SQ_SESSION);
+sqgetGlobalVar('folder_salt',$sm_folder_salt,SQ_SESSION);
+sqgetGlobalVar('opr_count', $sm_opr_count,   SQ_SESSION);
+sqgetGlobalVar('mailbox',   $mailbox,        SQ_POST);
 if (!sqgetGlobalVar('smtoken',$submitted_token, SQ_POST)) {
     $submitted_token = '';
 }
+if (!sqgetGlobalVar('smftoken',$submitted_ftoken, SQ_POST)) {
+    $submitted_ftoken = '';
+}
+
 /* end globals */
 
 if ($mailbox == '') {
@@ -60,6 +66,9 @@ if ( sqgetGlobalVar('backingout', $tmp, SQ_POST) ) {
     exit;
 }
 
+$sm_folder_salt %= 2;
+sqsession_register($sm_folder_salt, 'folder_salt');
+
 if( !sqgetGlobalVar('confirmed', $tmp, SQ_POST) ) {
     displayPageHeader($color, 'None');
 
@@ -71,6 +80,11 @@ if( !sqgetGlobalVar('confirmed', $tmp, SQ_POST) ) {
         $mailbox_unformatted_disp = $mailbox;
     }
 
+
+	$sm_folder_salt++;
+    $sm_folder_salt %= 2;
+	sqsession_register($sm_folder_salt, 'folder_salt');
+	
     echo '<br />' .
         html_tag( 'table', '', 'center', '', 'width="95%" border="0"' ) .
         html_tag( 'tr',
@@ -79,17 +93,36 @@ if( !sqgetGlobalVar('confirmed', $tmp, SQ_POST) ) {
         html_tag( 'tr' ) .
         html_tag( 'td', '', 'center', $color[4] ) .
         sprintf(_("Are you sure you want to delete %s?"), str_replace(array(' ','<','>'),array('&nbsp;','&lt;','&gt;'),imap_utf7_decode_local($mailbox_unformatted_disp))).
-        addForm('folders_delete.php', 'post', '', '', '', '', TRUE)."<p>\n".
+        addForm('folders_delete.php', 'post', '', '', '', '', FALSE)."<p>\n".
         addHidden('mailbox', $mailbox).
+        addHidden('smftoken', sm_get_folder_token($username, $sm_folder_salt)).
         addSubmit(_("Yes"), 'confirmed').
         addSubmit(_("No"), 'backingout').
         '</p></form><br /></td></tr></table>';
+     
+	 
+     $sm_opr_count=0;
+	 sqsession_register($sm_opr_count, 'opr_count');
 
     exit;
 }
 
 // first, validate security token
-sm_validate_security_token($submitted_token, 3600, TRUE);
+sm_validate_security_token($submitted_token, 3600, FALSE);
+
+//do the folder security token validation
+sm_validate_fd_security_token($submitted_ftoken, $username);
+
+sqgetGlobalVar('opr_count', $sm_opr_count,   SQ_SESSION);
+if($sm_opr_count > 0) {
+	echo "submitted f token".$submitted_ftoken."\n";
+	echo "salt:".$sm_folder_salt."\n";
+	$sm_opr_count = 0;
+	sqsession_register($sm_opr_count, 'opr_count');
+	set_up_language($squirrelmail_language, true);
+	logout_error(_("The current page request appears to have originated from an untrusted source."));
+	exit;
+}
 
 $imap_stream = sqimap_login($username, $key, $imapServerAddress, $imapPort, 0);
 

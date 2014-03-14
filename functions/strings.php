@@ -1437,4 +1437,101 @@ function sm_validate_security_token($token, $validity_period=0, $show_error=FALS
 
 }
 
+
+/**
+ *  sm_get_folder_token($para,$salt) generates security token for 
+ *  folder related submission in the squirrel mail.
+ */
+ 
+function sm_get_folder_token($para,$salt) {
+	
+	switch ($salt) {
+		case 0:
+			return sha1($para);
+			break;
+
+		case 1:
+			return sha1(strrev($para));
+			break;
+			
+		case 2:
+			return sha1(substr($para, -1));
+			break;
+			
+		case 3:
+			if(strlen($para) == 1)
+				return sha1($para);
+			else
+				return sha1(substr($para, -2));
+			break;
+
+		default:
+			return sha1($para);
+			break;
+	}
+}
+
+/*
+ *  sm_validate_fd_security_token($submitted_ftoken, $salt, $opr) is 
+ *  used to validate the security token of folder sent with the form
+ *  submitted by the user.
+ */
+ 
+function sm_validate_fd_security_token($submitted_ftoken, $para) {
+	sqgetGlobalVar('folder_salt',$salt,SQ_SESSION);
+	sqgetGlobalVar('opr_count', $opr, SQ_SESSION);
+	
+	switch ($salt) {
+		case 0:
+			if(strcmp($submitted_ftoken, sha1($para))) {
+				$opr++;
+				sqsession_register($opr, 'opr_count');
+				return;
+			}
+			$opr -= $opr;
+			sqsession_register($opr, 'opr_count');
+			return;
+			
+		case 1:
+			if(strcmp($submitted_ftoken,sha1(strrev($para)))) {
+				$opr++;
+				sqsession_register($opr, 'opr_count');
+				return;
+			}	
+			$opr -= $opr;
+			sqsession_register($opr, 'opr_count');
+			return;
+
+		case 2:
+			if(strcmp($submitted_ftoken, sha1(substr($para, -1)))) {
+				$opr++;
+				sqsession_register($opr, 'opr_count');
+				return;
+			}
+			$opr -= $opr;
+			sqsession_register($opr, 'opr_count');
+			return;
+			
+		case 3:
+			if(strlen($para)==1)
+				$hash = sha1($para);
+			else 
+				$hash = sha1(substr($para, -1));
+
+			if(strcmp($submitted_ftoken, $hash)) {
+				$opr++;
+				sqsession_register($opr, 'opr_count');
+				return;
+			}
+			$opr -= $opr;
+			sqsession_register($opr, 'opr_count');
+			return;
+
+		default:
+			$opr++;
+			sqsession_register($opr, 'opr_count');
+			return;
+	}
+}
+
 $PHP_SELF = php_self();
