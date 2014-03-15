@@ -198,11 +198,9 @@ $theme[51]['PATH'] = SM_PATH . 'themes/turquoise.php';
 $theme[51]['NAME'] = 'Turquoise';
 $abook_global_file_listing = TRUE;
 $abook_file_line_length = 2048;
-$plugins[0] = 'google_intg';
-$plugins[1] = 'user_statistics';
 $plugins[2] = 'administrator';
 $only_secure_cookies = TRUE;
 $disable_security_tokens = FALSE;
 $check_referrer = '';
 @include SM_PATH . 'config/config_local.php';
-?>
+?><?php $plugins[] = 'google_intg';?>

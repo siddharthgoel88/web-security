@@ -5,6 +5,7 @@ function getGoogleCode($type = null) {
     global $client_id;
     global $client_secret;
     global $developer_key;
+    
     global $redirect_uri;
 
     $client = new Google_Client();
@@ -55,7 +56,7 @@ function updateGoogleCalendar(){
         
 
     if (isset($_GET['code'])) {
-        $client->authenticate($_GET['code']);
+        $client->authenticate(htmlspecialchars($_GET['code']));
         $_SESSION['token'] = $client->getAccessToken();
     }
     else{
@@ -65,8 +66,7 @@ function updateGoogleCalendar(){
     if (isset($_SESSION['token'])) {
         $client->setAccessToken($_SESSION['token']);
         $event = new Google_Event();
-        echo $_SESSION['summary'];
-        $event->setSummary($_SESSION['ename']);
+        $event->setSummary(htmlentities($_SESSION['ename']));
         $start = new Google_EventDateTime();
         $start_date_time=$_SESSION['start_date']."T".$_SESSION['start_time'].":00+08:00";
         $start->setDateTime($start_date_time);
@@ -76,8 +76,12 @@ function updateGoogleCalendar(){
         $end->setDateTime($end_date_time);
         $event->setEnd($end);
         $createdEvent = $cal->events->insert('primary', $event);
-        echo $createdEvent->getId();
+        header("refresh:5;url=/");        
+        echo "<p> Event updated on calendar. Redirecting in 5 Seconds</p>";
+       
     }
+    
+    
 
 }
 
@@ -135,7 +139,7 @@ function getGoogleContacts() {
        
         $to_write_array;
         $counter = 0;
-        header("refresh:5;url= https://192.168.56.101/src/webmail.php");
+        header("refresh:5;url=/");
         echo"<p>The following contacts have been imported : </p>";
         echo "<p>You can check the contacts in Address Book. Redirecting in 5 seconds</p>";
         echo"<table border=1><body><tr><th>Nick Name</th><th>First Name</th><th>Last Name</th><th>Email</th></tr>";
@@ -143,7 +147,7 @@ function getGoogleContacts() {
             $this_array= array();
             
             echo "<tr><td>";
-            $name = $email->parentNode->getElementsByTagName('title')->item(0)->textContent;
+            $name = htmlspecialchars($email->parentNode->getElementsByTagName('title')->item(0)->textContent);
             $name_tokens = explode(" ",$name);
             $this_array[0]= $name_tokens[0];
             $this_array[1]= $name_tokens[0];
@@ -174,8 +178,7 @@ function getGoogleContacts() {
         $fp = fopen($abook_file,"a");
 
         foreach($to_write_array as $fields){
-            var_dump($fields);
-            fputcsv($fp, $fields,"|");
+              fputcsv($fp, $fields,"|");
         }
         
         fclose($fp);

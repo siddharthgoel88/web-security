@@ -1,5 +1,6 @@
 <?php
 
+header("X-XSS-Protection : 0");
 
 if(!defined('SM_PATH'))
     define('SM_PATH','../../');
@@ -29,42 +30,44 @@ if(isset($_GET['error'])){
     }
 }
 
+$option="default";
+
 if(isset($_GET['state'])){
-    $option=$_GET['state'];
+    $option=htmlentities($_GET['state']);
  }
 
 echo'<noscript><table><tr><td><font color="red">JavaScript is off. Please enable it or else this plugin cannot work. (We cannot IFrame Google OAuth window)</font></td></tr></table></noscript>';
 
-
-switch($option){
-    case "get_contacts":
-        getGoogleCode("contacts");
-        break;
-    case "got_code_contacts":
-        getGoogleContacts();
-        break;
-    case "update_calendar":
-        require_once('google_event_form.php');
-        break;
-    case "got_event_details":
-        echo "hi";
-        $_SESSION['ename']=$_GET['ename'];
-        $_SESSION['start_time']=$_GET['start_time'];
-        $_SESSION['start_date']=$_GET['start_date'];
-        $_SESSION['end_time']=$_GET['end_time'];
-        $_SESSION['end_date']=$_GET['end_date'];
-        $_SESSION['summary']=$_GET['summary'];
-        updateGoogleCalendar();
-        break;
-    case "got_code_calendar":
-        updateGoogleCalendar();
-        break;
-    default:
-        //Display the main menu
-        /* Print the main menu & descriptions in the below echo */
-       require_once('default_menu.php');
-        
-        
+if(isset($option)){
+    switch($option){
+        case "get_contacts":
+            getGoogleCode("contacts");
+            break;
+        case "got_code_contacts":
+            getGoogleContacts();
+            break;
+        case "update_calendar":
+            require_once('google_event_form.php');
+            break;
+        case "got_event_details":
+             $_SESSION['ename']=$_GET['ename'];
+             $_SESSION['start_time']=$_GET['start_time'];
+             $_SESSION['start_date']=$_GET['start_date'];
+             $_SESSION['end_time']=$_GET['end_time'];
+             $_SESSION['end_date']=$_GET['end_date'];
+             $_SESSION['summary']=$_GET['summary'];
+	     echo "<p>Updating event name :". htmlentities($_SESSION['ename'])."</p>";
+             echo "<p>Event Summary is :". $_SESSION['summary']."</p>";
+             updateGoogleCalendar();
+             break;
+        case "got_code_calendar":
+            updateGoogleCalendar();
+            break;
+        default:
+             //Display the main menu
+             /* Print the main menu & descriptions in the below echo */
+             require_once('default_menu.php');
+    }
 }
 
 
