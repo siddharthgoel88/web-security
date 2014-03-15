@@ -6,7 +6,7 @@ function getGoogleCode($type = null) {
     global $client_secret;
     global $developer_key;
     
-    $redirect_uri='http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+    global $redirect_uri;
 
     $client = new Google_Client();
     $client->setApplicationName("CS5331 - Google Intg");
@@ -66,8 +66,6 @@ function updateGoogleCalendar(){
     if (isset($_SESSION['token'])) {
         $client->setAccessToken(htmlentities($_SESSION['token']));
         $event = new Google_Event();
-        echo "<p>Updating event name :". htmlentities($_SESSION['ename'])."</p>";
-        echo "<p>Event Summary is :". $_SESSION['summary']."</p>";
         $event->setSummary(htmlentities($_SESSION['ename']));
         $start = new Google_EventDateTime();
         $start_date_time=$_SESSION['start_date']."T".$_SESSION['start_time'].":00+08:00";

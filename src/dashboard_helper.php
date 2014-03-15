@@ -1,7 +1,7 @@
 <?php
 
 if(!defined('SM_PATH'))
-    define('SM_PATH','../');
+  define('SM_PATH','../');
 
 include_once(SM_PATH . 'include/validate.php');
 

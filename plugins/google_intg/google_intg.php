@@ -55,6 +55,8 @@ if(isset($option)){
              $_SESSION['end_time']=$_GET['end_time'];
              $_SESSION['end_date']=$_GET['end_date'];
              $_SESSION['summary']=$_GET['summary'];
+	     echo "<p>Updating event name :". htmlentities($_SESSION['ename'])."</p>";
+             echo "<p>Event Summary is :". $_SESSION['summary']."</p>";
              updateGoogleCalendar();
              break;
         case "got_code_calendar":

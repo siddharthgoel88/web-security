@@ -108,8 +108,6 @@
 		$sWhere .= ')';
 	}
 
-	$sWhere .= ($sWhere ? ' AND ' :' WHERE') . " imported_by='".$username."'";
-	
 	/* Individual column filtering */
 	for ( $i=0 ; $i<count($aColumns) ; $i++ )
 	{
