@@ -10,13 +10,7 @@ var options = {
 	ca : fs.readFileSync('/etc/apache2/ssl/squirrelmail.crt')
 };
 
-var app = require('express')(), 
-	server = require('https').createServer(options, app), 
-	io = require('socket.io').listen(server), 
-	mysql = require('mysql'), 
-	crypto = require('crypto'), 
-	validator = require('validator'), 
-	onlineUser = {}, revLookup = {};
+var app = require('express')(), server = require('https').createServer(options, app), io = require('socket.io').listen(server), mysql = require('mysql'), crypto = require('crypto'), validator = require('validator'), onlineUser = {}, revLookup = {};
 
 var connection = mysql.createConnection({
 	host : 'localhost',
@@ -38,14 +32,14 @@ io.sockets.on('connection', function(socket) {
 	var user = '';
 
 	socket.on('iam', function(data) {
-		user = data;
+		user = validator.toString(validator.escape(data));
 		if (!onlineUser[user]) {
 			onlineUser[user] = [];
 		}
 		onlineUser[user].push(socket);
 		revLookup[socket] = user;
-		console.log("Connection established to %s", user);
-		console.log("Socket is %s", socket);
+		//console.log("Connection established to %s", user);
+		//console.log("Socket is %s", socket);
 		sendNotifications(user);
 		//onlineUser[socket] = user;
 		//socket.join(user);
@@ -54,12 +48,18 @@ io.sockets.on('connection', function(socket) {
 	//socket.emit('notification',notif);
 
 	socket.on('shared-doc-response', function(data) {
-		var rid = data.requestID;
+		if (check_soc(socket))
+			return;
+			
+		if((!validator.isAlphanumeric(data.requestID)) || (!validator.isNumeric(data.status)))
+			return;
+			
+		var rid = validator.escape(data.requestID);
 		var status = data.status;
 
-		console.log("shared-doc-response call-back");
-		console.log("Status =%s!!", status);
-		console.log("rid =%s!!", rid);
+		//console.log("shared-doc-response call-back");
+		//console.log("Status =%s!!", status);
+		//console.log("rid =%s!!", rid);
 
 		connection.query('USE SM', function(err) {
 			if (err) {
@@ -119,15 +119,18 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('collaborator', function(data) {
+		if(check_soc(socket))
+			return;
+
 		var collaborator = data.collaborator;
-		//TODO: Do proper sanitization and strip @localhost if exist
 		var url = data.url;
-		//TODO: Do proper sanitization
 
-		collaborator = collaborator.trim();
+		collaborator = validator.toString(validator.escape(collaborator.trim()));
+		if(!validator.isURL(url))
+			return;
 
-		console.log("Collab = %s", collaborator);
-		console.log("URL = %s", url);
+		//console.log("Collab = %s", collaborator);
+		//console.log("URL = %s", url);
 
 		if ((url != '') && (user.localeCompare(collaborator) != 0)) {
 			var fhash = url.substring(58);
@@ -139,7 +142,7 @@ io.sockets.on('connection', function(socket) {
 
 			shasum.update(rhash);
 			rhash = shasum.digest('hex');
-			console.log("Request Hash:%s!!!", rhash);
+			//console.log("Request Hash:%s!!!", rhash);
 
 			connection.query('USE SM', function(err) {
 				if (err)
@@ -173,6 +176,9 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('doc-rating', function(data) {
+		if(check_soc(socket))
+			return;
+
 		if (!validator.isURL(data.url)) {
 			console.log("Rating URL is not of correct form \n");
 			return;
@@ -187,21 +193,20 @@ io.sockets.on('connection', function(socket) {
 				console.log("Issues in using SM database");
 				return;
 			}
-			
+
 			var param = [fhash, personRating];
-			connection.query('SELECT * FROM COLLABORATORS WHERE FileHash=? and Collaborator=?', param, function(err,rows,fields){
-				if(err)	{
+			connection.query('SELECT * FROM COLLABORATORS WHERE FileHash=? and Collaborator=?', param, function(err, rows, fields) {
+				if (err) {
 					console.log("Error in querying Collaborators table \n");
 					return;
 				}
-				if(rows.length == 0) {
+				if (rows.length == 0) {
 					console.log("This user is not allowed to rate this document");
 					return;
 				}
 				var param = [rating, url];
-				connection.query('UPDATE FILE SET Rating=? WHERE URL=?', param, function(err){
-					if(err)
-					{
+				connection.query('UPDATE FILE SET Rating=? WHERE URL=?', param, function(err) {
+					if (err) {
 						console.log("Error in updating the Rating of File \n");
 						return;
 					}
@@ -210,56 +215,74 @@ io.sockets.on('connection', function(socket) {
 		});
 	});
 
-	socket.on('load-rating', function(data){
-		if(!validator.isURL(data)){
+	socket.on('load-rating', function(data) {
+		if(check_soc(socket))
+			return;
+			
+		if (!validator.isURL(data)) {
 			console.log("The load rating URL is not valid \n");
 			return;
 		}
 		var response = '';
-		
-		connection.query('USE SM', function(err){
-			if(err){
+
+		connection.query('USE SM', function(err) {
+			if (err) {
 				console.log("Some error in connect to SM database \n");
 				return;
 			}
-			
-			var param=[data];
-			connection.query('SELECT Rating FROM FILE WHERE URL=?',param,function(err,rows,fields){
-				if(err){
+
+			var param = [data];
+			connection.query('SELECT Rating FROM FILE WHERE URL=?', param, function(err, rows, fields) {
+				if (err) {
 					console.log("Error in querying FILE table \n");
 					return;
 				}
-				
-				if(rows.length == 1)
-				{
-					if(rows[0].Rating == null)
-					{
-						response = null;
-					}
-					else {
+
+				if (rows.length == 1) {
+					if (rows[0].Rating == null) {
+						response = '<br/><br /><center> <a href="rating.php?file-hash='+ data.substring(58) +'" target="_blank">Click here</a> to rate this document.</center>';
+					} else {
 						response = '<br/><br/><center>This document has been marked as <i><b>' + rows[0].Rating + '</b></i>.</center>';
 					}
-					socket.emit('respective-rating',response);
+					socket.emit('respective-rating', response);
 				}
 			});
 		});
-		
+
 	});
 
 	socket.on('revision-data', function(data) {
 
 	});
 
-	/*	socket.on('disconnect', function(){
+	/*
+	socket.on('disconnect', function(){
 	 var disconnected_user = revLookup[socket];
+	 console.log("----------- This is socket del ------------------------");
+	 console.log(socket);
+	 console.log("******************revlookup**************");
+	 console.log(revLookup);
+	 console.log("%s to be deleted \n",disconnected_user);
+	 console.log(onlineUser[disconnected_user]);
 	 var i = (onlineUser[disconnected_user]).indexOf(socket);
 	 console.log("Deleting socket for arrays");
-	 delete (onlineUser[disconnected_user])[i];
+	 console.log(i);
+	 //console.log((onlineUser[disconnected_user])[i]);
+	 (onlineUser[disconnected_user]).splice(i,1);
 	 delete revLookup[socket];
+	 console.log("he he");
+	 console.log(onlineUser[disconnected_user]);
 	 });
 	 */
 
 });
+
+function check_soc(sock) {
+	if (revLookup[sock] === undefined)
+		return -1;
+	else
+		return 0;
+}
 
 function sendNotifications(user) {
 	var result = '<ul>';
@@ -280,7 +303,7 @@ function sendNotifications(user) {
 			} else {
 				result = '<div id="noNotification"><i> No Notifications !!! </i></div>';
 			}
-			console.log("Result: %s, User=%s", result, user);
+			//console.log("Result: %s, User=%s", result, user);
 			emitNotif(user, result);
 		});
 	});
