@@ -26,15 +26,18 @@ global $mail_fetch_allow_unsubscribed;
  */
 $mail_fetch_allow_unsubscribed = false;
 
-function hex2bin( $data ) {
-    /* Original code by josh@superfork.com */
+//If function is already declared donot re-declare
+if (!function_exists(hex2bin)){
+	function hex2bin( $data ) {
+	    /* Original code by josh@superfork.com */
 
-    $len = strlen($data);
-    $newdata = '';
-    for( $i=0; $i < $len; $i += 2 ) {
-        $newdata .= pack( "C", hexdec( substr( $data, $i, 2) ) );
-    }
-    return $newdata;
+	    $len = strlen($data);
+	    $newdata = '';
+	    for( $i=0; $i < $len; $i += 2 ) {
+	        $newdata .= pack( "C", hexdec( substr( $data, $i, 2) ) );
+	    }
+	    return $newdata;
+	}
 }
 
 function mf_keyED( $txt ) {

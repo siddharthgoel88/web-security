@@ -17,7 +17,7 @@ function install_plugin_global($plugin_name){
    
     if(!is_plugin_global($plugin_name)){
         $handle=@fopen($main_config_file_path,"a");
-        $string = "<?php \$plugins[] = '".$plugin_name."';?>";
+        $string = "\n<?php \$plugins[] = '".$plugin_name."';?>";
         fwrite($handle, $string);
         fclose($handle);
         return true;
@@ -82,6 +82,8 @@ EOD;
     if(!count($plugins_list)==0){
     	$plugins_list=array_unique($plugins_list,SORT_STRING);
         foreach($plugins_list as $plugin){
+	    if($plugin!=="user_statistics"&&$plugin!=="dashboard_plugins"&&$plugin!=="google_intg") 
+		continue;
             echo '<tr><td>'.
                '<input type="radio"  Name="uninstall_option" value="'.$plugin.'">'
                 . '</td><td>'.$plugin.'</td></tr>';
