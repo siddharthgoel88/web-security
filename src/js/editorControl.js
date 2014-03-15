@@ -136,10 +136,7 @@ function jQuery_sqmail(whoami){
 				});
 				
 				socket.on('respective-rating', function(data){
-					if(data)
-						$('#docRating').html(data).hide().fadeIn();
-					else
-						$('#docRating').hide().fadeIn();
+					$('#docRating').html(data).hide().fadeIn();
 						
 				});
 			
@@ -158,7 +155,7 @@ function jQuery_sqmail(whoami){
 					return false;
 				});
 				
-				$('#docRating').on('click','#rateSubmit',function(e){
+			/* $('#docRating').on('click','#rateSubmit',function(e){
 					e.preventDefault();
 					var data = {
 						rating : $('#rateData').val(),
@@ -168,7 +165,7 @@ function jQuery_sqmail(whoami){
 					$('#docRating').fadeOut();
 					setTimeout(function(){loadRating();},3000);
 					return false;
-				});
+				}); */
 				
 			});
 }

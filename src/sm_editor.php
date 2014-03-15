@@ -71,19 +71,7 @@ sqgetGlobalVar('username', $username, SQ_SESSION);
 			</ul>
 		</div>
 		
-		<div id="docRating">
-			<center><h4>Please rate this document</h4>
-			<form id="rateForm">
-				<select id="rateData">
-					<option id="op1" value="Not Important">Not Important</option>
-					<option id="op2" value="Normal">Normal</option>
-					<option id="op3" value="Important">Important</option>
-					<option id="op4" value="Very Important">Very Important</option>
-				</select>
-				<input type="submit" id="rateSubmit" value="Rate it!!" />
-			</form>
-			</center>';
-		</div>
+		<div id="docRating"></div>
 
 		<div id="saveDiv">
                         <input type="button" id="saveButton" name="save" value="Save Document">

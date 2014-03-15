@@ -184,5 +184,51 @@ function sm_upload(&$file_content,&$file_name)
 	}
 }
 
+function add_doc_rating($hash, $usr, $rate_val) {
+	$con = smdb_connect();
+	
+	if($con!=-1){
+		$hash = mysqli_real_escape_string ($con,$hash);
+		$usr = mysqli_real_escape_string ($con,$usr);
+		$rate_val = mysqli_real_escape_string ($con,$rate_val);
+		
+		if(isOwner($usr, $hash)){
+			$query = "UPDATE FILE SET Rating='".$rate_val."' WHERE FileHash='".$hash."'";
+			mysqli_query($con,$query);
+			
+			smdb_close($con);
+			return 1;
+		} else {
+			smdb_close($con);
+			return 0;
+		}	
+
+	} else {
+		smdb_close($con);
+		return 0;
+	}
+}
+
+function isOwner($usr,$hash) {
+	$con = smdb_connect();
+	
+	if($con!=-1){
+		$hash = mysqli_real_escape_string ($con,$hash);
+		$usr = mysqli_real_escape_string ($con,$usr);
+		$query = "SELECT * FROM COLLABORATORS WHERE FileHash='".$hash."' AND Collaborator='".$usr."'";
+		$result = mysqli_query($con,$query);
+		
+		if(mysqli_num_rows($result) >= 1){
+			smdb_close($con);
+			return 1;
+		} else {
+			smdb_close($con);
+			return 0;
+		}
+	} else {
+		smdb_close($con);
+		return 0;
+	}
+}
 
 ?>

@@ -175,6 +175,7 @@ io.sockets.on('connection', function(socket) {
 
 	});
 
+/*
 	socket.on('doc-rating', function(data) {
 		if(check_soc(socket))
 			return;
@@ -213,7 +214,7 @@ io.sockets.on('connection', function(socket) {
 				});
 			});
 		});
-	});
+	});*/
 
 	socket.on('load-rating', function(data) {
 		if(check_soc(socket))
