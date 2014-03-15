@@ -32,7 +32,7 @@ if(isset($_GET['error'])){
 $option="default";
 
 if(isset($_GET['state'])){
-    $option=$_GET['state'];
+    $option=htmlentities($_GET['state']);
  }
 
 echo'<noscript><table><tr><td><font color="red">JavaScript is off. Please enable it or else this plugin cannot work. (We cannot IFrame Google OAuth window)</font></td></tr></table></noscript>';
@@ -55,10 +55,7 @@ if(isset($option)){
              $_SESSION['end_time']=$_GET['end_time'];
              $_SESSION['end_date']=$_GET['end_date'];
              $_SESSION['summary']=$_GET['summary'];
-             echo "<p>Updating event name :". htmlentities($_SESSION['ename'])."</p>";
-             echo "<p>Event Summary is :". $_SESSION['summary']."</p>";
              updateGoogleCalendar();
-            
              break;
         case "got_code_calendar":
             updateGoogleCalendar();

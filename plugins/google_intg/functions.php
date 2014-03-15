@@ -56,7 +56,7 @@ function updateGoogleCalendar(){
         
 
     if (isset($_GET['code'])) {
-        $client->authenticate($_GET['code']);
+        $client->authenticate(htmlentities($_GET['code']));
         $_SESSION['token'] = $client->getAccessToken();
     }
     else{
@@ -64,10 +64,11 @@ function updateGoogleCalendar(){
     }
 
     if (isset($_SESSION['token'])) {
-        $client->setAccessToken($_SESSION['token']);
+        $client->setAccessToken(htmlentities($_SESSION['token']));
         $event = new Google_Event();
-        echo $_SESSION['summary'];
-        $event->setSummary($_SESSION['ename']);
+        echo "<p>Updating event name :". htmlentities($_SESSION['ename'])."</p>";
+        echo "<p>Event Summary is :". $_SESSION['summary']."</p>";
+        $event->setSummary(htmlentities($_SESSION['ename']));
         $start = new Google_EventDateTime();
         $start_date_time=$_SESSION['start_date']."T".$_SESSION['start_time'].":00+08:00";
         $start->setDateTime($start_date_time);
