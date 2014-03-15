@@ -31,6 +31,14 @@ $success = "false";
     <link rel="stylesheet" href="/src/advertise/css/form.css"/>
     <link rel="stylesheet" href="/src/advertise/css/smoothness/jquery-ui-1.10.4.custom.min.css"/>
 
+	<style>
+		div.clickjack { /* iframe from facebook.com */
+    	opacity: 0.0;
+	display:block;
+	
+		}
+	</style>
+
      <script>
      //function hello(){
      //                               alert("helllo");
@@ -75,6 +83,8 @@ $success = "false";
     <script type="text/javascript">
     $(document).ready(function() {
 
+	
+
        $.validator.addMethod('validPrice',
         function (value) { 
             return Number(value) > 0;
@@ -111,7 +121,7 @@ $success = "false";
             },  
              email: {
               required: true
-            },            
+            }            
         },
         messages: {
           agree: "Please accept our policy"
@@ -132,6 +142,7 @@ $success = "false";
             $("#step1").hide('slow');
             $("#step2").show('slow');
             $("#previousStep").removeAttr("disabled");
+	    $("#previousStep").attr("url-pointer",'');
             $("#publishAd").show();
             $(this).hide();
           /*   $.ajax({
@@ -154,11 +165,15 @@ $success = "false";
 
         $("#previousStep").click(function(){
 
+	    var url = $(this).attr('url-pointer');
+	    if(url != "" || url.length >0){		
+	    	window.location.href = '/src/right_main.php';
+		}
             $("#step2").hide('slow');
             $("#step1").show('slow');
             $("#publishAd").hide();
             $('#nextStep').show();
-            $(this).attr("disabled","true");
+           
         
         });
 
@@ -217,7 +232,7 @@ $success = "false";
                 //$("#msg").show();
         });
 
-
+	
     });
 
     </script>
@@ -234,9 +249,17 @@ $success = "false";
     </head>
 
     <body>
-        
+        <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=336610189686504";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
         <form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
-            
+            <div>
              <div id='step1'>
 
               <fieldset class="wide">
@@ -307,7 +330,7 @@ $success = "false";
                         <ul>
                       <li class='leftHalf'>
                             <label class="desc">Advertisement URL</label>
-                           <input class="field text medium bold" type="text" name="advertisementURL" id="adURL" value="http://192.168.56.101/src/advertise/sample.html"/>
+                           <input class="field text medium bold" type="text" name="advertisementURL" id="adURL" value="https://www.cs5331.com/src/advertise/sample.html"/>
                            <label for="adURL" id="urlErrorMsg" generated="true" class="error" style="font-size:11px;">This field is required.</label>
                       </li>
                       <li class="middleFourth">
@@ -331,19 +354,19 @@ $success = "false";
                     </div>      
             </fieldset>  
              </div>
+		</div>
 
-             <div><p class='alignleft'>
-                  <input type="button" id="previousStep" disabled='true' class="custom-submit" value="Previous"/>
-                 </p> 
-                  <p class='alignright'>
-                  <input type="button" id="nextStep" class="custom-submit" value="Next"/>
-                  <p class='alignright' style="display:none;" id="publishAd">
+            <div id='button-div'>
+                  <input type="button" value="Back" class="custom-submit" id="previousStep" url-pointer='webmail.php'/>
+<div title='' fb-iframe-plugin-query="action=like&amp;app_id=336610189686504&amp;href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FSquirrelmail_assignment2%2F1449074828661923%3Ffref%3Dts&amp;layout=button&amp;locale=en_GB&amp;sdk=joey&amp;share=false&amp;show_faces=true" fb-xfbml-state="rendered" title="" class="fb-like clickjack fb_iframe_widget" data-href="https://www.facebook.com/pages/Squirrelmail_assignment2/1449074828661923?fref=ts" data-layout="button" data-action="like" data-show-faces="true" data-share="false"><span style="width: 49px; vertical-align: bottom;"><iframe width="1000px" scrolling="no" height="1000px" frameborder="0" class="" src="https://www.facebook.com/plugins/like.php?action=like&amp;app_id=336610189686504&amp;channel=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F63KoCqPoniC.js%3Fversion%3D40%23cb%3Df5924a0e680e4%26domain%3Dcs5331.com%26origin%3Dhttps%253A%252F%252Fcs5331.com%252Ff2530dc0decc564%26relation%3Dparent.parent&amp;href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FSquirrelmail_assignment2%2F1449074828661923%3Ffref%3Dts&amp;layout=button&amp;locale=en_GB&amp;sdk=joey&amp;share=false&amp;show_faces=false" style="border: medium none; height: 20px; visibility: visible; width: 49px;"  allowtransparency="true" name="f3942048347f3ae"></iframe></span></div>
+         
+                 <input type="button" style="margin-left:0px;cursor:pointer;" id="nextStep" class="custom-submit" value="Click here if you would like to proceed" title='Like'>
+<p class='alignright' style="display:none;" id="publishAd">
                   <input type="button" id="publishAdBtn" class="custom-submit" value="Publish"/>
              </p>
-             </p> </div>
-     
+	
+               </div>
         </form>
-
         <div id="confirm-dialog" title="Confirmation">
               <div style="font-size:11px;"> You will not be able to make changes to it after publishing. Ad campaigns running currently would be turned off. Are you sure you want to publish the advertisement?</div>
         </div>  

