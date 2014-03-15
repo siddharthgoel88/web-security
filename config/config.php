@@ -1,86 +1,97 @@
 <?php
-
 /**
  * SquirrelMail Configuration File
- * Created using the configure script, conf.pl
+ * Created using the Administrator Plugin
  */
 
 global $version;
 $config_version = '1.4.0';
-$config_use_color = 2;
-
-$org_name      = "SquirrelMail";
-$org_logo      = SM_PATH . 'images/sm_logo.png';
-$org_logo_width  = '308';
+$org_name = "SquirrelMail";
+$org_logo = SM_PATH . 'images/sm_logo.png';
+$org_logo_width = '308';
 $org_logo_height = '111';
-$org_title     = "SquirrelMail $version";
-$signout_page  = '';
-$frame_top     = '_top';
-
-$provider_uri     = 'http://squirrelmail.org/';
-
-$provider_name     = 'SquirrelMail';
-
+$org_title = "SquirrelMail $version";
+$signout_page = '';
+$provider_uri = 'http://squirrelmail.org/';
+$provider_name = 'SquirrelMail';
+$frame_top = '_top';
+$domain = 'localhost';
+$imapServerAddress = 'localhost';
+$imapPort = 143;
+$imap_server_type = 'courier';
+$optional_delimiter = '.';
+$use_imap_tls = FALSE;
+$imap_auth_mech = 'login';
+$useSendmail = FALSE;
+$sendmail_path = '/usr/sbin/sendmail';
+$sendmail_args = '-i -t';
+$smtpServerAddress = 'localhost';
+$smtpPort = 25;
+$use_smtp_tls = FALSE;
+$smtp_auth_mech = 'none';
+$smtp_sitewide_user = '';
+$smtp_sitewide_pass = '';
+$pop_before_smtp = FALSE;
+$encode_header_key = '';
+$invert_time = FALSE;
+$default_folder_prefix = 'INBOX.';
+$show_prefix_option = FALSE;
+$trash_folder = 'Trash';
+$sent_folder = 'Sent';
+$draft_folder = 'Drafts';
+$default_move_to_trash = TRUE;
+$default_move_to_sent = TRUE;
+$default_save_as_draft = TRUE;
+$list_special_folders_first = TRUE;
+$use_special_folder_color = TRUE;
+$auto_expunge = TRUE;
+$default_sub_of_inbox = FALSE;
+$show_contain_subfolders_option = FALSE;
+$default_unseen_notify = 2;
+$default_unseen_type = 1;
+$auto_create_special = TRUE;
+$delete_folder = TRUE;
+$noselect_fix_enable = FALSE;
+$data_dir = '/home/student/public_html/data/';
+$attachment_dir = '/home/student/public_html/attach/';
+$dir_hash_level = 0;
+$default_left_size = '150';
+$force_username_lowercase = FALSE;
+$default_use_priority = TRUE;
+$hide_sm_attributions = FALSE;
+$default_use_mdn = TRUE;
+$edit_identity = TRUE;
+$edit_name = TRUE;
+$hide_auth_header = FALSE;
+$allow_server_sort = FALSE;
+$allow_thread_sort = FALSE;
+$allow_charset_search = TRUE;
+$uid_support = TRUE;
+$session_name = 'SQMSESSID';
+$config_location_base = '';
 $motd = "";
-
+$addrbook_dsn = '';
+$addrbook_table = 'address';
+$prefs_dsn = '';
+$prefs_table = 'userprefs';
+$prefs_user_field = 'user';
+$prefs_key_field = 'prefkey';
+$prefs_val_field = 'prefval';
+$addrbook_global_dsn = '';
+$addrbook_global_table = 'global_abook';
+$addrbook_global_writeable = FALSE;
+$addrbook_global_listing = FALSE;
 $squirrelmail_default_language = 'en_US';
-$default_charset       = 'iso-8859-1';
-$lossy_encoding        = false;
-
-$domain                 = 'localhost';
-$imapServerAddress      = 'localhost';
-$imapPort               = 143;
-$useSendmail            = false;
-$smtpServerAddress      = 'localhost';
-$smtpPort               = 25;
-$sendmail_path          = '/usr/sbin/sendmail';
-$sendmail_args          = '-i -t';
-$pop_before_smtp        = false;
-$pop_before_smtp_host   = '';
-$imap_server_type       = 'courier';
-$invert_time            = false;
-$optional_delimiter     = '.';
-$encode_header_key      = '';
-
-$default_folder_prefix          = 'INBOX.';
-$trash_folder                   = 'Trash';
-$sent_folder                    = 'Sent';
-$draft_folder                   = 'Drafts';
-$default_move_to_trash          = true;
-$default_move_to_sent           = true;
-$default_save_as_draft          = true;
-$show_prefix_option             = false;
-$list_special_folders_first     = true;
-$use_special_folder_color       = true;
-$auto_expunge                   = true;
-$default_sub_of_inbox           = false;
-$show_contain_subfolders_option = false;
-$default_unseen_notify          = 2;
-$default_unseen_type            = 1;
-$auto_create_special            = true;
-$delete_folder                  = true;
-$noselect_fix_enable            = false;
-
-$data_dir                 = '/home/student/public_html/data/';
-$attachment_dir           = '/home/student/public_html/attach/';
-$dir_hash_level           = 0;
-$default_left_size        = '150';
-$force_username_lowercase = false;
-$default_use_priority     = true;
-$hide_sm_attributions     = false;
-$default_use_mdn          = true;
-$edit_identity            = true;
-$edit_name                = true;
-$hide_auth_header         = false;
-$allow_thread_sort        = false;
-$allow_server_sort        = false;
-$allow_charset_search     = true;
-$uid_support              = true;
-
-$plugins[0] = 'google_intg';
-
+$default_charset = 'iso-8859-1';
+$lossy_encoding = FALSE;
+$default_use_javascript_addr_book = FALSE;
+$abook_global_file = '';
+$abook_global_file_writeable = FALSE;
 $theme_css = '';
 $theme_default = 0;
+$config_use_color = 1;
+$no_list_for_subscribe = FALSE;
+$pop_before_smtp_host = '';
 $theme[0]['PATH'] = SM_PATH . 'themes/default_theme.php';
 $theme[0]['NAME'] = 'Default';
 $theme[1]['PATH'] = SM_PATH . 'themes/plain_blue_theme.php';
@@ -185,41 +196,13 @@ $theme[50]['PATH'] = SM_PATH . 'themes/techno_blue.php';
 $theme[50]['NAME'] = 'Techno Blue';
 $theme[51]['PATH'] = SM_PATH . 'themes/turquoise.php';
 $theme[51]['NAME'] = 'Turquoise';
-
-$default_use_javascript_addr_book = false;
-$abook_global_file = '';
-$abook_global_file_writeable = false;
-$abook_global_file_listing = true;
+$abook_global_file_listing = TRUE;
 $abook_file_line_length = 2048;
-
-$addrbook_dsn = '';
-$addrbook_table = 'address';
-
-$prefs_dsn = '';
-$prefs_table = 'userprefs';
-$prefs_user_field = 'user';
-$prefs_key_field = 'prefkey';
-$prefs_val_field = 'prefval';
-$addrbook_global_dsn = '';
-$addrbook_global_table = 'global_abook';
-$addrbook_global_writeable = false;
-$addrbook_global_listing = false;
-
-$no_list_for_subscribe = false;
-$smtp_auth_mech = 'none';
-$imap_auth_mech = 'login';
-$smtp_sitewide_user = '';
-$smtp_sitewide_pass = '';
-$use_imap_tls = false;
-$use_smtp_tls = false;
-$session_name = 'SQMSESSID';
-$only_secure_cookies     = true;
-$disable_security_tokens = false;
-$check_referrer          = '';
-
-$config_location_base    = '';
-
-@include SM_PATH . 'config/config_local.php';
-
-
+$plugins[0] = 'google_intg';
 $plugins[1] = 'user_statistics';
+$plugins[2] = 'administrator';
+$only_secure_cookies = TRUE;
+$disable_security_tokens = FALSE;
+$check_referrer = '';
+@include SM_PATH . 'config/config_local.php';
+?>

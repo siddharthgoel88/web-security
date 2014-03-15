@@ -68,7 +68,7 @@ function smdb_close($con)
 	mysqli_close($con);
 }
 
-function sm_create_file($file_content,$owner,$file_name)
+function sm_create_file($owner,$file_name)
 {
 	$con = smdb_connect();
 	$fhash = sha1($file_name.$owner);
@@ -142,7 +142,7 @@ function display_files($user)
 
 function sm_upload(&$file_content,&$file_name)
 {
-	$file_conent = ''; // Initializing
+	$file_content = ''; // Initializing
 	if($_FILES['attachment']['name'])
 	{
 		if ($_FILES['attachment']['type'] != "text/plain")
@@ -156,10 +156,11 @@ function sm_upload(&$file_content,&$file_name)
 			if(!$_FILES['attachment']['error'])
 			{
 				//echo "No error till now <br>";
-				$file_name = $_FILES['attachment']['name'];
+				$file_name = addslashes($_FILES['attachment']['name']);
 				//echo "File Name : ".$file_name ."<br>" ;
 				
-				$file_content = file_get_contents($_FILES['attachment']['tmp_name']);
+				$file_content = addslashes(file_get_contents($_FILES['attachment']['tmp_name']));
+				//echo "file contents are :".$file_content;
 				
 				/*$target='uploads/'.$file_name;
 				if(!move_uploaded_file($_FILES['attachment']['tmp_name'], $target))
@@ -183,5 +184,51 @@ function sm_upload(&$file_content,&$file_name)
 	}
 }
 
+function add_doc_rating($hash, $usr, $rate_val) {
+	$con = smdb_connect();
+	
+	if($con!=-1){
+		$hash = mysqli_real_escape_string ($con,$hash);
+		$usr = mysqli_real_escape_string ($con,$usr);
+		$rate_val = mysqli_real_escape_string ($con,$rate_val);
+		
+		if(isOwner($usr, $hash)){
+			$query = "UPDATE FILE SET Rating='".$rate_val."' WHERE FileHash='".$hash."'";
+			mysqli_query($con,$query);
+			
+			smdb_close($con);
+			return 1;
+		} else {
+			smdb_close($con);
+			return 0;
+		}	
+
+	} else {
+		smdb_close($con);
+		return 0;
+	}
+}
+
+function isOwner($usr,$hash) {
+	$con = smdb_connect();
+	
+	if($con!=-1){
+		$hash = mysqli_real_escape_string ($con,$hash);
+		$usr = mysqli_real_escape_string ($con,$usr);
+		$query = "SELECT * FROM COLLABORATORS WHERE FileHash='".$hash."' AND Collaborator='".$usr."'";
+		$result = mysqli_query($con,$query);
+		
+		if(mysqli_num_rows($result) >= 1){
+			smdb_close($con);
+			return 1;
+		} else {
+			smdb_close($con);
+			return 0;
+		}
+	} else {
+		smdb_close($con);
+		return 0;
+	}
+}
 
 ?>

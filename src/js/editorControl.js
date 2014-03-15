@@ -1,9 +1,7 @@
-/**
- * @author Siddharth Goel
- */
-
-var fileURL;
+var envInit = "envFile";
+var fileURL = "";
 var firepadObj;
+var globalSocket;
 
 function fillFirepad(ret_val,fhash,user,data)
 {
@@ -30,16 +28,7 @@ function fillFirepad(ret_val,fhash,user,data)
 	}
 	else if((ret_val == 0)||(ret_val == 2))
 	{
-		/*
-		txtArea = document.getElementById("txtArea");
-		editArea = document.getElementById("editAreaID");
-		uploadFile =document.getElementById("uploadFile");
-		//uploadFile.style.display = "none";
-		txtArea.style.display = "block";
-		editArea.innerHTML = data;
-		*/
 		var url = "https://resplendent-fire-6199.firebaseio.com/squirrelmail/" + fhash;
-		console.log(url); 
 		fp = initializeFirepad(url,user,data);
 	}
 }
@@ -63,6 +52,7 @@ function initializeFirepad(url,user,data)
     	};
     });
     setFileURL(url);
+    $(document).ready(setTimeout(function(){loadRating();},2000));
 }
 
 
@@ -85,9 +75,16 @@ function loadFirepad(url,user)
     	};
     });
     setFileURL(url);
-  //  loadRev();
-    
+	loadRating();
 }
+
+function loadRating(){
+	var soc = getSocket();
+	soc.emit('load-rating', getFileURL());
+} 
+
+
+
 /*
 function loadRev()
 {
@@ -97,6 +94,92 @@ function loadRev()
 	console.log(value);
 }
 */
+
+function jQuery_sqmail(whoami){
+		var hostIP = window.location.host;
+		var host = "https://" + hostIP + ":3000/";
+        var sockURL = host + "socket.io/socket.io.js";
+        var flag = 0;
+        if(document.location.href.indexOf(envInit)!=-1){
+        	var envLoc = document.location.href.indexOf(envInit)+envInit.length+1;
+        	flag = 1;
+        }
+        
+        if(flag){
+			var comDat = document.location.href.substring(envLoc);
+			var envArr = comDat.split('&&');
+			document.write(decodeURIComponent(envArr[0] + envArr[1].substring(envInit.length + 1)));
+			flag = 0;
+		}
+        
+        $.getScript(sockURL, function(){
+	        var socket = io.connect(host);
+	        setSocket(socket);
+			var $collabForm = $('#addCollabForm');
+
+				$collabForm.submit(function(e){
+					e.preventDefault();
+					var user = $('#collaborator').val() ; //TODO: Sanitize this !!!!
+					var link = getFileURL();
+					var data = {
+						collaborator : user,
+						url : link
+					};
+					socket.emit('collaborator', data);
+				});
+			
+				socket.emit('iam',whoami);
+			
+				socket.on('notification', function(data){
+					$('#noNotification').fadeOut();
+					$('#notifications').append(data).hide().fadeIn();
+				});
+				
+				socket.on('respective-rating', function(data){
+					$('#docRating').html(data).hide().fadeIn();
+						
+				});
+			
+				$("#notifications").on("click",".rqst",function(e){
+					var rid = $(this).data("rid");
+					var stat = $(this).data("status");
+					console.log(rid);
+					console.log(stat);
+					var response = {
+						requestID: rid,
+						status: stat
+					};
+					console.log(response.status);
+					socket.emit('shared-doc-response', response);
+					$('#'+rid).fadeOut();
+					return false;
+				});
+				
+			/* $('#docRating').on('click','#rateSubmit',function(e){
+					e.preventDefault();
+					var data = {
+						rating : $('#rateData').val(),
+						url : getFileURL()
+					};
+					socket.emit('doc-rating',data);
+					$('#docRating').fadeOut();
+					setTimeout(function(){loadRating();},3000);
+					return false;
+				}); */
+				
+			});
+}
+
+function setSocket(gsocket)
+{
+	globalSocket = gsocket;
+}
+
+function getSocket()
+{
+	return globalSocket;
+}
+
 function setFirepad(fpad)
 {
 	firepadObj = fpad;

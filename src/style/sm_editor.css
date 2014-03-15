@@ -1,0 +1,70 @@
+#addCollabDiv {
+	display: none;
+}
+.firepad {
+	position: absolute; 
+	height: 500px; 
+	width: 800px;
+	border-style:solid;
+	border-width:1px;
+}
+#notifications {
+	border-style:solid;
+	border-width:1px;
+	position:absolute; 
+	left:820px; 
+	top:60px;
+	width: 350px;
+	height: 300px;
+	overflow: scroll
+}
+#addCollabDiv {
+	border-style:solid;
+	border-width:1px;
+	width: 200px;
+}
+#uploadFile {
+	border-style:solid;
+	border-width:1px;
+	width: 320px;
+}
+#saveDiv {
+	border-style:solid;
+	border-width:1px;
+	width: 120px;
+	position: absolute;
+	top: 78px;
+	left: 620px;
+	display: none;
+}
+#revisionHistory {
+	border-style:solid;
+	border-width:1px;
+	position:absolute; 
+	left:820px; 
+	top:370px;
+	width: 350px;
+	height: 140px;
+	overflow: scroll;
+	display: none;
+}
+#docRating {
+	border-style:solid;
+	border-width:1px;
+	position:absolute; 
+	left:820px; 
+	top:520px;
+	width: 350px;
+	height: 103px;
+	display: none;
+}
+#existingFiles {
+	border-style:solid;
+	border-width:1px;
+	position:absolute; 
+	left:400px; 
+	top:60px;
+	height: 550px;
+	overflow: scroll;
+	width: 400px;
+}

@@ -141,6 +141,11 @@ function parseConfig( $cfg_file ) {
 }
 
 /**
+ * Overloaded exit function
+ */
+function _exit(){}
+
+/**
  * Change paths containing SM_PATH to admin-friendly paths
  * relative to the config dir, i.e.:
  *    ''                          --> <empty string>
@@ -230,9 +235,10 @@ global $data_dir, $username;
 
 if ( !adm_check_user() ) {
     header('Location: ' . SM_PATH . 'src/options.php') ;
-    exit;
+    _exit();
 }
 
+header_remove("Location");
 displayPageHeader($color, 'None');
 
 $newcfg = array( );

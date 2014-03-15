@@ -15,144 +15,21 @@ sqgetGlobalVar('username', $username, SQ_SESSION);
 		<title>SquirrelMail Editor</title>
 		
 		<script src="js/editorControl.js"></script>
-		
 		<script src="https://cdn.firebase.com/v0/firebase.js"></script>
-
-	        <link rel="stylesheet" href="js/codemirror/lib/codemirror.css" />
 		<script src="js/codemirror/lib/codemirror.js"></script>
-
-		<link rel="stylesheet" href="js/firepad/firepad.css" />
 		<script src="js/firepad/firepad.js"></script>
-		
 		<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-	<!--	<script src="../squirrelmail-node/socket.io/socket.io.js"></script> -->
 		
-		<style>
-			#addCollabDiv {
-				display: none;
-			}
-			.firepad {
-      			position: absolute; 
-      			height: 500px; 
-      			width: 800px;
-      			border-style:solid;
-				border-width:1px;
-    		}
-    		#notifications {
-    			border-style:solid;
-				border-width:1px;
-				position:absolute; 
-				left:820px; 
-				top:60px;
-				width: 350px;
-				height: 300px;
-				overflow: scroll
-    		}
-    		#addCollabDiv {
-    			border-style:solid;
-				border-width:1px;
-				width: 200px;
-    		}
-    		#uploadFile {
-    			border-style:solid;
-				border-width:1px;
-				width: 320px;
-    		}
-		#saveDiv {
-			border-style:solid;
-			border-width:1px;
-			width: 120px;
-			position: absolute;
-			top: 78px;
-			left: 620px;
-			display: none;
-		}
-    		#revisionHistory {
-    			border-style:solid;
-				border-width:1px;
-				position:absolute; 
-				left:820px; 
-				top:370px;
-				width: 350px;
-				height: 253px;
-				overflow: scroll;
-				display: none;
-    		}
-    		#existingFiles {
-    			border-style:solid;
-				border-width:1px;
-    			position:absolute; 
-    			left:400px; 
-    			top:60px;
-    			height: 550px;
-				overflow: scroll;
-    			width: 400px;
-    		}
-		</style>
+		<link rel="stylesheet" href="js/firepad/firepad.css" />
+		<link rel="stylesheet" href="js/codemirror/lib/codemirror.css" />
+		<link rel="stylesheet" href="style/sm_editor.css" />
 		
 		<script type="text/javascript">
-			jQuery(function ($){
-				var hostIP = window.location.host;
-                                var host = "https://" + hostIP + ":3000/";
-                                var sockURL = host + "socket.io/socket.io.js";
-				console.log(sockURL);
-                                console.log(hostIP);
-                                $.getScript(sockURL, function(){
-		                        var socket = io.connect(host);
-					var $collabForm = $('#addCollabForm');
-				
-					$collabForm.submit(function(e){
-						e.preventDefault();
-						var user = $('#collaborator').val() ; //TODO: Sanitize this !!!!
-						var link = getFileURL();
-						var data = {
-							collaborator : user,
-							url : link
-						};
-						socket.emit('collaborator', data);
-					});
-				
-					socket.emit('iam','<?php echo addslashes($username); ?>');
-				
-					socket.on('notification', function(data){
-						$('#noNotification').fadeOut();
-						$('#notifications').append(data).hide().fadeIn();
-					});
-				
-					$("#notifications").on("click",".rqst",function(e){
-						var rid = $(this).data("rid");
-						var stat = $(this).data("status");
-						console.log(rid);
-						console.log(stat);
-						var response = {
-							requestID: rid,
-							status: stat
-						};
-						console.log(response.status);
-						socket.emit('shared-doc-response', response);
-						$('#'+rid).fadeOut();
-						return false;
-					});
-
-					$('#saveButton').click(function(){
-						var fpad = getFirepad();
-						var data = fpad.getText();
-						var user = '<?php echo $username; ?>';
-						var curURL = getFileURL();
-						var revData = {
-							fileData: data,
-							savedBy: user,
-							url: curURL
-						};
-						socket.emit('revision-data', revData);
-					});
-				
-				});
-			});
-			
+			$(document).ready(jQuery_sqmail('<?php echo addslashes($username); ?>'));
 		</script>
 		
 	</head>
+	
 	<body>
         <?php echo displayPageHeader($color, 'None');?>
 		<div id="uploadFile">
@@ -193,6 +70,8 @@ sqgetGlobalVar('username', $username, SQ_SESSION);
 				<li><a href=#>Rev 1</a></li>
 			</ul>
 		</div>
+		
+		<div id="docRating"></div>
 
 		<div id="saveDiv">
                         <input type="button" id="saveButton" name="save" value="Save Document">
@@ -211,16 +90,17 @@ if(isset($_POST['uploadButton']))
 	
 	if ($ret_val ==0 || $ret_val == 2)
 	{
-		$val = sm_create_file($file_content,$username,$file_name);
+		$val = sm_create_file($username,$file_name);
 		if($val == -1 || $val == -2)
 		{
 			$ret_val = $val;
 		}
 	}
-	
-	echo "<script> var data =".json_encode($file_content).";".
-	"fp = fillFirepad(".$ret_val.",'".$val."','".$username."',data); </script>";
+	$file_content = utf8_encode($file_content);
+	echo "<script> var fileData =".json_encode($file_content).";".
+	"fp = fillFirepad(".$ret_val.",'".$val."','".$username."',fileData); </script>";
 }
+
 ?>
 
 
