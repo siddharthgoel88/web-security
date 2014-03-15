@@ -29,7 +29,7 @@ require_once('new_functions.php');
 $option = "default";
 
 if(isset($_REQUEST['state'])){
-    $option = $_REQUEST['state'];
+    $option = htmlspecialchars($_REQUEST['state']);
     
 }
 
@@ -44,20 +44,27 @@ switch ($option){
        show_plugins();
        break;
     case 'install_plugin':
-        $name = $_GET['install_option'];
-        if(!is_plugin_global($name)){           
-            install_plugin_global($name);
-            if(!is_dir_present($name)){
-                install_from_folder($name);
-            }
-            sqsession_destroy();
-	    unset($SESSION);
-            echo '<script> window.top.location = "signout.php";</script>';
+        $name = htmlspecialchars($_GET['install_option']);
+        if($name==="dashboard_plugins"||$name==="user_statistics")
+        {
+        	//Do nothing as this is managed by this plugin only  only add hooks
+        	if(!is_plugin_global($name))
+        		install_plugin_global($name);
         }
-        //show_plugins();
+        else{
+        	if(!is_plugin_global($name)){           
+            	install_plugin_global($name);
+            	if(!is_dir_present($name)){
+                	install_from_folder($name);
+            	}
+        	}
+        }
+        sqsession_destroy();
+	    unset($SESSION);
+            echo '<script> window.top.location = "signout.php";</script>';     
         break;
     case 'uninstall_plugin':
-        $name = $_GET['uninstall_option'];
+        $name = htmlspecialchars($_GET['uninstall_option']);
         remove_plugin_global($name);
         echo '<script> window.top.location = "signout.php";</script>';
         break;
@@ -66,8 +73,5 @@ switch ($option){
          break;
         
 }
-/*require_once('default_menu.php');
 
-show_plugins();
-*/
 ?>

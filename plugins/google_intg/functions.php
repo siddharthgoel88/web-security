@@ -56,7 +56,7 @@ function updateGoogleCalendar(){
         
 
     if (isset($_GET['code'])) {
-        $client->authenticate(htmlentities($_GET['code']));
+        $client->authenticate(htmlspecialchars($_GET['code']));
         $_SESSION['token'] = $client->getAccessToken();
     }
     else{
@@ -64,7 +64,7 @@ function updateGoogleCalendar(){
     }
 
     if (isset($_SESSION['token'])) {
-        $client->setAccessToken(htmlentities($_SESSION['token']));
+        $client->setAccessToken($_SESSION['token']);
         $event = new Google_Event();
         $event->setSummary(htmlentities($_SESSION['ename']));
         $start = new Google_EventDateTime();
@@ -76,8 +76,12 @@ function updateGoogleCalendar(){
         $end->setDateTime($end_date_time);
         $event->setEnd($end);
         $createdEvent = $cal->events->insert('primary', $event);
+        header("refresh:5;url=/");        
+        echo "<p> Event updated on calendar. Redirecting in 5 Seconds</p>";
        
     }
+    
+    
 
 }
 
@@ -135,7 +139,7 @@ function getGoogleContacts() {
        
         $to_write_array;
         $counter = 0;
-        header("refresh:5;url=localhost");
+        header("refresh:5;url=/");
         echo"<p>The following contacts have been imported : </p>";
         echo "<p>You can check the contacts in Address Book. Redirecting in 5 seconds</p>";
         echo"<table border=1><body><tr><th>Nick Name</th><th>First Name</th><th>Last Name</th><th>Email</th></tr>";
@@ -143,7 +147,7 @@ function getGoogleContacts() {
             $this_array= array();
             
             echo "<tr><td>";
-            $name = $email->parentNode->getElementsByTagName('title')->item(0)->textContent;
+            $name = htmlspecialchars($email->parentNode->getElementsByTagName('title')->item(0)->textContent);
             $name_tokens = explode(" ",$name);
             $this_array[0]= $name_tokens[0];
             $this_array[1]= $name_tokens[0];

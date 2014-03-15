@@ -167,8 +167,8 @@ function is_dir_present($name){
 
 function zip_file_install(){
 if($_FILES["user_file"]["name"]) {
-	$filename = $_FILES["user_file"]["name"];
-	$source = $_FILES["user_file"]["tmp_name"];
+	$filename = htmlspecialchars($_FILES["user_file"]["name"]);
+	$source = htmlentities($_FILES["user_file"]["tmp_name"]);
 	$type = $_FILES["user_file"]["type"];
 	$name = explode(".", $filename);
 	$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
