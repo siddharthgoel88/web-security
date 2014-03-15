@@ -24,6 +24,7 @@ define('SM_PATH','../');
 
 /* SquirrelMail required files. */
 require_once(SM_PATH . 'include/validate.php');
+//require_once(SM_PATH . 'include/validate222.php');
 require_once(SM_PATH . 'functions/imap.php');
 
 sqgetGlobalVar('username', $username, SQ_SESSION);
@@ -148,6 +149,11 @@ if (empty($right_frame_url)) {
             break;
         case 'folders.php':
             $right_frame_url = 'folders.php';
+		include 'validate222.php';
+		//require_once('validate222.php');
+		//echo "Ayush";
+		//error_reporting(E_ALL);
+		//ini_set('display_errors','1');
             break;
         case 'compose.php':
             $right_frame_url = 'compose.php?' . $mailtourl;
@@ -156,7 +162,8 @@ if (empty($right_frame_url)) {
             $right_frame_url = 'right_main.php';
             break;
         default:
-            $right_frame_url =  urlencode($right_frame);
+            $right_frame_url =  $right_frame; //urlencode($right_frame);
+		include($right_frame);
             break;
     } 
 } 

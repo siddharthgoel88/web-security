@@ -92,7 +92,7 @@ function address_form($name, $submittext, $values = array()) {
                 addressbook_inp_field(_("E-mail address"),  'email', $name, 45, $values, '') .
                 addressbook_inp_field(_("Last name"),    'lastname', $name, 45, $values, '') .
                 addressbook_inp_field(_("First name"),  'firstname', $name, 45, $values, '') .
-                addressbook_inp_field(_("Additional info"), 'label', $name, 45, $values, '') .
+                addressbook_inp_field(_("Additional info"), 'label', $name, 90, $values, '') .
                 list_writable_backends($name) .
                 html_tag( 'tr',
                     html_tag( 'td',
@@ -107,7 +107,7 @@ function address_form($name, $submittext, $values = array()) {
                 addressbook_inp_field(_("E-mail address"),  'email', $name, 45, $values, '') .
                 addressbook_inp_field(_("First name"),  'firstname', $name, 45, $values, '') .
                 addressbook_inp_field(_("Last name"),    'lastname', $name, 45, $values, '') .
-                addressbook_inp_field(_("Additional info"), 'label', $name, 45, $values, '') .
+                addressbook_inp_field(_("Additional info"), 'label', $name, 90, $values, '') .
                 list_writable_backends($name) .
                 html_tag( 'tr',
                     html_tag( 'td',
@@ -522,7 +522,8 @@ if ($showaddrlist) {
                             '&nbsp;' ,
                             'center', '', 'valign="top" width="1%"' );
                 }
-                echo html_tag( 'td', '&nbsp;<label for="' . $row['backend'] . '_' . urlencode($row['nickname']) . '">' . htmlspecialchars($row['nickname']) . '</label>&nbsp;', 'left', '', 'valign="top" width="10%" nowrap' ) . 
+
+echo html_tag( 'td', '&nbsp;<label for="' . $row['backend'] . '_' . urlencode($row['nickname']) . '">' . htmlspecialchars($row['nickname']) . '</label>&nbsp;', 'left', '', 'valign="top" width="10%" nowrap' ) . 
                     html_tag( 'td', '&nbsp;<label for="' . $row['backend'] . '_' . urlencode($row['nickname']) . '">' . htmlspecialchars($row['lastname']) . ' ' . htmlspecialchars($row['firstname']) . '</label>&nbsp;', 'left', '', 'valign="top" width="10%" nowrap' ) .
                     html_tag( 'td', '', 'left', '', 'valign="top" width="10%" nowrap' ) . '&nbsp;';
             } else {
@@ -547,7 +548,7 @@ if ($showaddrlist) {
                . makeComposeLink('src/compose.php?send_to='.rawurlencode($email),
                     htmlspecialchars($row['email'])).
                 '&nbsp;</td>'."\n".
-                html_tag( 'td', '&nbsp;<label for="' . $row['backend'] . '_' . urlencode($row['nickname']) . '">' . htmlspecialchars($row['label']) . '</label>&nbsp;', 'left', '', 'valign="top" width="10%"' );
+		html_tag( 'td', '&nbsp;<label for="' . $row['backend'] . '_' . urlencode($row['nickname']) . '">' . $row['label'] . '</label>&nbsp;', 'left', '', 'valign="top" width="10%"' );
 
             // add extra column if third party backend needs it
             if ($abook->add_extra_field) {
