@@ -22,12 +22,9 @@ include_once(SM_PATH . 'functions/prefs.php');
 
 displayPageHeader($color, "None");
 
-//require_once('../pranav_plugins_common/string_functions.php');
-//require_once('../pranav_plugins_common/utility_functions.php');
 
 require_once('new_functions.php');
 
-//$_SESSION['username']='pranav@lh.com';
 
 $option = "default";
 
@@ -35,8 +32,6 @@ if(isset($_REQUEST['state'])){
     $option = $_REQUEST['state'];
     
 }
-
-
 
 switch ($option){
     case 'file_upload':
@@ -56,6 +51,7 @@ switch ($option){
                 install_from_folder($name);
             }
             sqsession_destroy();
+	    unset($SESSION);
             echo '<script> window.top.location = "signout.php";</script>';
         }
         //show_plugins();

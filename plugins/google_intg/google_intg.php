@@ -1,5 +1,6 @@
 <?php
 
+header("X-XSS-Protection : 0");
 
 if(!defined('SM_PATH'))
     define('SM_PATH','../../');

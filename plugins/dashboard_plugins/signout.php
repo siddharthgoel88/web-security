@@ -68,6 +68,7 @@ link="<?php echo $color[7]; ?>" vlink="<?php echo $color[7]; ?>"
 alink="<?php echo $color[7]; ?>">
 <br /><br />
 <?php
+unset($_SESSION['session_expired_location']);
 $plugin_message = concat_hook_function('logout_above_text');
 echo
 html_tag( 'table',
@@ -76,8 +77,8 @@ html_tag( 'table',
     '', $color[0], 'width="100%"' ) .
     $plugin_message .
     html_tag( 'tr',
-         html_tag( 'td', _("You have been successfully signed out.") .
-             '<br /><a href="login.php" target="' . $frame_top . '">' .
+	html_tag( 'td', _("You have been successfully signed out.") .
+             '<br /><a href="/" target="' . $frame_top . '">' .
              _("Click here to log back in.") . '</a><br />' ,
          'center' ) ,
     '', $color[4], 'width="100%"' ) .
