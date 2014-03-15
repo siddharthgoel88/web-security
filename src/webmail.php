@@ -24,13 +24,13 @@ define('SM_PATH','../');
 
 /* SquirrelMail required files. */
 require_once(SM_PATH . 'include/validate.php');
-//require_once(SM_PATH . 'include/validate222.php');
 require_once(SM_PATH . 'functions/imap.php');
 
 sqgetGlobalVar('username', $username, SQ_SESSION);
 sqgetGlobalVar('delimiter', $delimiter, SQ_SESSION);
 sqgetGlobalVar('onetimepad', $onetimepad, SQ_SESSION);
 sqgetGlobalVar('right_frame', $right_frame, SQ_GET);
+sqgetGlobalVar('optional_frame', $optional_frame, SQ_GET);
 if (sqgetGlobalVar('sort', $sort)) {
     $sort = (int) $sort;
 }
@@ -149,11 +149,6 @@ if (empty($right_frame_url)) {
             break;
         case 'folders.php':
             $right_frame_url = 'folders.php';
-		include 'validate222.php';
-		//require_once('validate222.php');
-		//echo "Ayush";
-		//error_reporting(E_ALL);
-		//ini_set('display_errors','1');
             break;
         case 'compose.php':
             $right_frame_url = 'compose.php?' . $mailtourl;
@@ -162,25 +157,35 @@ if (empty($right_frame_url)) {
             $right_frame_url = 'right_main.php';
             break;
         default:
-            $right_frame_url =  $right_frame; //urlencode($right_frame);
-		include($right_frame);
+            $right_frame_url =  urlencode($right_frame);
+	    include($right_frame);
             break;
     } 
 } 
 
 if ($location_of_bar == 'right') {
-    $output .= "<frame src=\"$right_frame_url\" name=\"right\" frameborder=\"1\">\n" .
+    $outputFinal = $output. "<frame src=\"$right_frame_url\" name=\"right\" frameborder=\"1\">\n" .
                "<frame src=\"left_main.php\" name=\"left\" frameborder=\"1\">\n";
+	if(!empty($optional_frame)) {
+		$outputFinal = $output."<frame src=\"$optional_frame\" name=\"right\" frameborder=\"1\">\n" .
+               "<frame src=\"left_main.php\" name=\"left\" frameborder=\"1\">\n";
+	}
+
 }
 else {
-    $output .= "<frame src=\"left_main.php\" name=\"left\" frameborder=\"1\">\n".
+    $outputFinal = $output."<frame src=\"left_main.php\" name=\"left\" frameborder=\"1\">\n".
                "<frame src=\"$right_frame_url\" name=\"right\" frameborder=\"1\">\n";
+		if(!empty($optional_frame)) {
+			$outputFinal = $output."<frame src=\"left_main.php\" name=\"left\" frameborder=\"1\">\n"."<frame src=\"$optional_frame\" name=\"right\" frameborder=\"1\">\n";
+		}
+	
+
 }
-$ret = concat_hook_function('webmail_bottom', $output);
+$ret = concat_hook_function('webmail_bottom', $outputFinal);
 if($ret != '') {
-    $output = $ret;
+    $outputFinal = $ret;
 }
-echo $output;
+echo $outputFinal;
 ?>
 </frameset>
 </html>
