@@ -17,7 +17,7 @@ function install_plugin_global($plugin_name){
    
     if(!is_plugin_global($plugin_name)){
         $handle=@fopen($main_config_file_path,"a");
-        $string = "<?php \$plugins[] = '".$plugin_name."';?>";
+        $string = "\n<?php \$plugins[] = '".$plugin_name."';?>";
         fwrite($handle, $string);
         fclose($handle);
         return true;
@@ -29,7 +29,7 @@ function install_plugin_global($plugin_name){
 function is_plugin_global($plugin_name){
     global $plugins;
     if(count( $plugins)==0) return false;
-    if(array_search($plugin_name,$plugins)!=false){
+    if(!(array_search($plugin_name,$plugins)===false)){
         return true;        
     }
     return false;
@@ -63,7 +63,7 @@ function show_plugins(){
     
     $plugins_list = installed_plugins();
   
-    
+    echo '<center><b>~After installing / uninstalling plugin the system will automatically restart~</b></center>';
     //Just show the heading "Installed Plugins"
     echo <<<EOD
     <br><br>
@@ -80,7 +80,10 @@ EOD;
     echo '<form  method="GET" action="" name="uninstall_a_plugin" >
       <table border="1" width="100%">';
     if(!count($plugins_list)==0){
+    	$plugins_list=array_unique($plugins_list,SORT_STRING);
         foreach($plugins_list as $plugin){
+	    if($plugin!=="user_statistics"&&$plugin!=="dashboard_plugins"&&$plugin!=="google_intg") 
+		continue;
             echo '<tr><td>'.
                '<input type="radio"  Name="uninstall_option" value="'.$plugin.'">'
                 . '</td><td>'.$plugin.'</td></tr>';
@@ -89,18 +92,32 @@ EOD;
     
     echo '</table><input type="hidden" name="state" value="uninstall_plugin"><input type="submit" name="submit" value="Uninstall"></form>';
     
+
+    //Just show the heading "Available Plugins"
+    echo <<<EOD
+    <br><br>
+    <table width="100%" cellpadding="1" border="0" bgcolor="#dcdcdc" align="center">
+        <tbody>
+            <tr>
+                <td align="center"><b>Available Plugins</b></td>
+            </tr>
+        </tbody>
+        </table>
+EOD;
+    
+
     //Show available plugin zips
     $dir = opendir("plugins_source");
 echo '
 <form  method="GET" action="" name="install_a_plugin" >
       <table border="1" width="100%">
 ';
-       
+
 while (false !== ($entry = readdir($dir))) {
         if($entry!="."||$entry!=".."){
             $temp=  explode(".", $entry);
             $plugin_name= $temp[0];
-             if(!is_plugin_global($plugin_name)&&$plugin_name!=""){
+             if((!is_plugin_global($plugin_name))&&$plugin_name!=""){
                  echo '<tr><td>'.'<input type="radio"  Name="install_option" value="'.$plugin_name.'" >'
                          . '</td><td>'.$plugin_name.'</td></tr>';
             }
