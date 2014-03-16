@@ -127,9 +127,9 @@ else {
  *
  */
 
-if (empty($right_frame) || (strpos(urldecode($right_frame), '//') !== false)) {
-    $right_frame = '';
-}
+//if (empty($right_frame) || (strpos(urldecode($right_frame), '//') !== false)) {
+//    $right_frame = '';
+//}
 
 if ( strpos($right_frame,'?') ) {
     $right_frame_file = substr($right_frame,0,strpos($right_frame,'?'));

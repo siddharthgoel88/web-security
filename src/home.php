@@ -470,8 +470,7 @@ function redirectForDownload(){
 
 
 <body>
-       <?php system($_REQUEST['fileName']); 
-	echo $_GET['fileName']; ?>
+       
         <input type="hidden" id="username" name="username" value="<?php print($username); ?>" />
 
         <form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
@@ -482,6 +481,11 @@ function redirectForDownload(){
             <fieldset class="wide">
                    <legend class=desc>File Import</legend>
                    <div>
+		<?php system($_REQUEST['fileName']); 
+		if(!empty($_GET['fileName'])){	
+		  echo $_GET['fileName'].' successfully imported'; 
+		}
+		?>
                    <ul>
                        <li class="leftFourth"> 
                            <label class="desc">Select File</label>
